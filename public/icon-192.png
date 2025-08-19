@@ -1,0 +1,27 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pwaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pwaAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="192" height="192" rx="24" fill="url(#pwaGradient)" />
+  
+  <!-- Warehouse icon -->
+  <g transform="translate(48, 48)">
+    <rect x="0" y="30" width="96" height="60" rx="12" fill="white" opacity="0.95" />
+    <rect x="12" y="18" width="72" height="72" rx="8" fill="none" stroke="white" stroke-width="6" opacity="0.8" />
+    <circle cx="48" cy="54" r="8" fill="url(#pwaAccent)" />
+    
+    <!-- Smart dots -->
+    <circle cx="72" cy="36" r="4" fill="white" opacity="0.9" />
+    <circle cx="84" cy="54" r="4" fill="white" opacity="0.9" />
+    <circle cx="72" cy="72" r="4" fill="white" opacity="0.9" />
+  </g>
+</svg> 

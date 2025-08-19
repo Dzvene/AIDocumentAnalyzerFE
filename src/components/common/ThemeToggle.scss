@@ -1,0 +1,63 @@
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  height: 24px;
+  width: 44px;
+  align-items: center;
+  border-radius: 9999px;
+  background-color: #e5e7eb;
+  transition: background-color 200ms ease-in-out;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #3b82f6;
+  }
+
+  &--dark {
+    background-color: #2563eb;
+  }
+
+  &__slider {
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    transform: translateX(4px);
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 200ms ease-in-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+
+    &--dark {
+      transform: translateX(24px);
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 12px;
+    width: 12px;
+    top: 2px;
+    left: 2px;
+
+    svg {
+      height: 12px;
+      width: 12px;
+    }
+
+    &--moon {
+      color: #2563eb;
+    }
+
+    &--sun {
+      color: #eab308;
+    }
+  }
+}

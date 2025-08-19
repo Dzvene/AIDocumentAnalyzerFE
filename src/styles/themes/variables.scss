@@ -1,0 +1,137 @@
+// Colors from OnLimitShop Legacy
+:root {
+  // Main brand colors
+  --color-white: #fff;
+  --color-black: #0c1321;
+  --color-red: #e94222;
+  --color-orange: #f98c3b;
+  --color-yellow: #f9c200;
+  --color-green: #00cf7e;
+  
+  // Slate colors (gray scale)
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #64748b;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  
+  // Hover states
+  --color-hover-50: #ff6648;
+  
+  // Gradients
+  --gradients-red: linear-gradient(222.6deg, #ff6648 0.01%, #d62300 100%);
+  --gradients-orange: linear-gradient(222.6deg, #ff9a53 0.01%, #f56c28 100%);
+  --gradients-green: linear-gradient(222.6deg, #00da84 0.01%, #009d5f 100%);
+  
+  // Primary colors (mapped from brand colors)
+  --color-primary: var(--color-yellow);
+  --color-primary-hover: #e0ad00;
+  --color-secondary: var(--color-orange);
+  --color-secondary-hover: var(--color-hover-50);
+  
+  // Success/Warning/Error colors
+  --color-success: var(--color-green);
+  --color-success-bg: #ecfdf5;
+  --color-warning: var(--color-orange);
+  --color-warning-bg: #fffbeb;
+  --color-error: var(--color-red);
+  --color-error-bg: #fef2f2;
+
+  // Background colors
+  --color-bg-primary: var(--color-white);
+  --color-bg-secondary: var(--color-slate-50);
+  --color-bg-tertiary: var(--color-slate-100);
+
+  // Text colors
+  --color-text-primary: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-600);
+  --color-text-tertiary: var(--color-slate-400);
+
+  // Border colors
+  --color-border-primary: var(--color-slate-200);
+  --color-border-secondary: var(--color-slate-300);
+
+  // Shadow colors
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+// Dark theme
+[data-theme='dark'] {
+  // Background colors
+  --color-bg-primary: var(--color-slate-900);
+  --color-bg-secondary: var(--color-slate-800);
+  --color-bg-tertiary: var(--color-slate-700);
+
+  // Text colors
+  --color-text-primary: var(--color-slate-50);
+  --color-text-secondary: var(--color-slate-300);
+  --color-text-tertiary: var(--color-slate-400);
+
+  // Border colors
+  --color-border-primary: var(--color-slate-700);
+  --color-border-secondary: var(--color-slate-600);
+}
+
+// Spacing
+:root {
+  --spacing-xs: 0.25rem; // 4px
+  --spacing-sm: 0.5rem;  // 8px
+  --spacing-md: 1rem;    // 16px
+  --spacing-lg: 1.5rem;  // 24px
+  --spacing-xl: 2rem;    // 32px
+  --spacing-2xl: 3rem;   // 48px
+  --spacing-3xl: 4rem;   // 64px
+}
+
+// Border radius
+:root {
+  --radius-sm: 0.25rem;  // 4px
+  --radius-md: 0.375rem; // 6px
+  --radius-lg: 0.5rem;   // 8px
+  --radius-xl: 0.75rem;  // 12px
+  --radius-2xl: 1rem;    // 16px
+  --radius-full: 9999px;
+}
+
+// Typography
+:root {
+  --font-family-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --font-size-xs: 0.75rem;   // 12px
+  --font-size-sm: 0.875rem;  // 14px
+  --font-size-base: 1rem;    // 16px
+  --font-size-lg: 1.125rem;  // 18px
+  --font-size-xl: 1.25rem;   // 20px
+  --font-size-2xl: 1.5rem;   // 24px
+  --font-size-3xl: 1.875rem; // 30px
+  --font-size-4xl: 2.25rem;  // 36px
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+}
+
+// Z-index
+:root {
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+}

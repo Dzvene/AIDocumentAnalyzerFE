@@ -1,0 +1,125 @@
+.language-toggle {
+  position: relative;
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 200ms;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    cursor: pointer;
+    gap: 8px;
+
+    &:hover {
+      background-color: #f9fafb;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #3b82f6;
+    }
+  }
+
+  &__flag {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  &__code {
+    display: block;
+
+    @media (min-width: 640px) {
+      display: none;
+    }
+  }
+
+  &__name {
+    display: none;
+
+    @media (min-width: 640px) {
+      display: block;
+    }
+  }
+
+  &__arrow {
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+    transition: transform 200ms;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    right: 0;
+    z-index: 50;
+    margin-top: 8px;
+    width: 192px;
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+  }
+
+  &__option {
+    width: 100%;
+    text-align: left;
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: background-color 200ms;
+    color: #374151;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+
+    &--selected {
+      background-color: #dbeafe;
+      color: #1e3a8a;
+
+      &:hover {
+        background-color: #bfdbfe;
+      }
+    }
+  }
+
+  &__option-flag {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  &__option-text {
+    flex: 1;
+  }
+
+  &__option-name {
+    font-weight: 500;
+  }
+
+  &__option-native {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  &__checkmark {
+    margin-left: auto;
+    width: 16px;
+    height: 16px;
+    color: #2563eb;
+  }
+}

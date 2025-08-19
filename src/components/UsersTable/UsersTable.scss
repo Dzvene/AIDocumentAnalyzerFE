@@ -1,0 +1,274 @@
+.users-table {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+
+  &__header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  &__search {
+    flex: 1;
+    max-width: 400px;
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    
+    &:focus {
+      outline: 2px solid var(--color-primary-500);
+      outline-offset: 2px;
+    }
+  }
+
+  &__create-btn {
+    background-color: var(--color-primary-600);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-primary-700);
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-primary-500);
+      outline-offset: 2px;
+    }
+  }
+
+  &__loading {
+    padding: var(--spacing-2xl);
+    text-align: center;
+    color: var(--color-text-secondary);
+  }
+
+  &__error {
+    padding: var(--spacing-md);
+    margin: var(--spacing-md);
+    background-color: var(--color-error-50);
+    color: var(--color-error-600);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-error-100);
+  }
+
+  &__content {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+  }
+
+  &__th {
+    background-color: var(--color-bg-secondary);
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-bg-tertiary);
+    }
+
+    &--sorted {
+      background-color: var(--color-primary-50);
+      color: var(--color-primary-700);
+    }
+  }
+
+  &__sort-icon {
+    margin-left: var(--spacing-xs);
+    font-size: 12px;
+  }
+
+  &__row {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-bg-secondary);
+    }
+  }
+
+  &__cell {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border-primary);
+    vertical-align: middle;
+  }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  &__user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: var(--font-weight-semibold);
+    flex-shrink: 0;
+  }
+
+  &__user-name {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+  }
+
+  &__user-id {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    font-family: var(--font-family-mono);
+  }
+
+  &__roles {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+  }
+
+  &__role-badge {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: var(--font-weight-medium);
+  }
+
+  &__status-btn {
+    border: none;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &--active {
+      background-color: var(--color-success-100);
+      color: var(--color-success-700);
+
+      &:hover {
+        background-color: var(--color-success-200);
+      }
+    }
+
+    &--inactive {
+      background-color: var(--color-gray-200);
+      color: var(--color-gray-700);
+
+      &:hover {
+        background-color: var(--color-gray-300);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  &__action-btn {
+    border: none;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &--edit {
+      background-color: var(--color-primary-100);
+      color: var(--color-primary-700);
+
+      &:hover {
+        background-color: var(--color-primary-200);
+      }
+    }
+
+    &--delete {
+      background-color: var(--color-error-100);
+      color: var(--color-error-700);
+
+      &:hover {
+        background-color: var(--color-error-200);
+      }
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-primary-500);
+      outline-offset: 2px;
+    }
+  }
+
+  &__empty {
+    padding: var(--spacing-2xl);
+    text-align: center;
+    color: var(--color-text-secondary);
+  }
+
+  &__pagination {
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--color-border-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__pagination-btn {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-primary);
+    color: var(--color-text-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-bg-tertiary);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-primary-500);
+      outline-offset: 2px;
+    }
+  }
+
+  &__pagination-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+}
