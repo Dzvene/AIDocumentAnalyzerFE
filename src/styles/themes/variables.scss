@@ -31,6 +31,13 @@
   // Primary colors (mapped from brand colors)
   --color-primary: var(--color-yellow);
   --color-primary-hover: #e0ad00;
+  --color-primary-50: #fef3c7;
+  --color-primary-100: #fde68a;
+  --color-primary-200: #fcd34d;
+  --color-primary-300: #fbbf24;
+  --color-primary-400: #f59e0b;
+  --color-primary-500: #f9c200;
+  --color-primary-600: #d97706;
   --color-secondary: var(--color-orange);
   --color-secondary-hover: var(--color-hover-50);
   
@@ -41,6 +48,9 @@
   --color-warning-bg: #fffbeb;
   --color-error: var(--color-red);
   --color-error-bg: #fef2f2;
+  --color-error-50: #fef2f2;
+  --color-error-200: #fecaca;
+  --color-error-600: #dc2626;
 
   // Background colors
   --color-bg-primary: var(--color-white);
