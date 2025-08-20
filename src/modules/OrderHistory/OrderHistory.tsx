@@ -40,124 +40,36 @@ export const OrderHistory: React.FC = () => {
   const [sortBy, setSortBy] = useState<'date' | 'total'>('date')
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null)
 
-  // Mock data fallback
-  const getMockOrders = (): Order[] => [
-    {
-      id: '1',
-      orderNumber: 'ORD-2025-001234',
-      date: '2025-01-10T14:30:00',
-      status: 'delivered',
-      total: 3450,
-      items: [
-        {
-          id: '1',
-          productName: 'Органические яблоки',
-          productImage: '/images/products/apples.jpg',
-          quantity: 2,
-          price: 150,
-          shopName: 'Фермерская лавка'
-        },
-        {
-          id: '2',
-          productName: 'Молоко фермерское',
-          productImage: '/images/products/milk.jpg',
-          quantity: 3,
-          price: 90,
-          shopName: 'Фермерская лавка'
-        }
-      ],
-      deliveryAddress: 'г. Москва, ул. Примерная, д. 123, кв. 45',
-      paymentMethod: 'Банковская карта',
-      deliveryTime: '2025-01-10T18:45:00'
-    },
-    {
-      id: '2',
-      orderNumber: 'ORD-2025-001233',
-      date: '2025-01-08T10:15:00',
-      status: 'processing',
-      total: 5670,
-      items: [
-        {
-          id: '3',
-          productName: 'Хлеб ремесленный',
-          productImage: '/images/products/bread.jpg',
-          quantity: 1,
-          price: 120,
-          shopName: 'Пекарня "Традиция"'
-        },
-        {
-          id: '4',
-          productName: 'Круассаны французские',
-          productImage: '/images/products/croissant.jpg',
-          quantity: 6,
-          price: 85,
-          shopName: 'Пекарня "Традиция"'
-        }
-      ],
-      deliveryAddress: 'г. Москва, ул. Тестовая, д. 456, офис 789',
-      paymentMethod: 'Наличными при получении',
-      trackingNumber: 'TRK123456789',
-      estimatedDelivery: '2025-01-15'
-    },
-    {
-      id: '3',
-      orderNumber: 'ORD-2025-001232',
-      date: '2025-01-05T16:20:00',
-      status: 'shipped',
-      total: 2890,
-      items: [
-        {
-          id: '5',
-          productName: 'Мёд натуральный',
-          productImage: '/images/products/honey.jpg',
-          quantity: 2,
-          price: 450,
-          shopName: 'Медовая лавка'
-        }
-      ],
-      deliveryAddress: 'г. Москва, ул. Медовая, д. 10',
-      paymentMethod: 'Банковская карта',
-      trackingNumber: 'TRK987654321',
-      estimatedDelivery: '2025-01-12'
-    },
-    {
-      id: '4',
-      orderNumber: 'ORD-2024-009876',
-      date: '2024-12-28T12:00:00',
-      status: 'cancelled',
-      total: 1250,
-      items: [
-        {
-          id: '6',
-          productName: 'Сыр домашний',
-          productImage: '/images/products/cheese.jpg',
-          quantity: 1,
-          price: 650,
-          shopName: 'Сырная лавка'
-        }
-      ],
-      deliveryAddress: 'г. Москва, ул. Сырная, д. 5',
-      paymentMethod: 'Банковская карта'
-    }
-  ]
 
   const loadOrders = async () => {
     setLoading(true)
     setError(null)
     
     try {
-      // Try to fetch from API first
+      // Fetch orders from backend API
       const response = await ordersApi.getMyOrders()
-      setOrders(response.data || [])
-    } catch (apiError) {
-      console.warn('API not available, using mock data:', apiError)
       
-      // Fallback to mock data with realistic delay
-      setTimeout(() => {
-        setOrders(getMockOrders())
-        notification.info(t('errors.apiNotAvailable', 'API недоступно, используются демо-данные'))
-      }, 500)
+      // Transform backend response to match our interface
+      if (response.data && Array.isArray(response.data)) {
+        setOrders(response.data)
+      } else if (response.orders && Array.isArray(response.orders)) {
+        // Handle different response structure
+        setOrders(response.orders)
+      } else {
+        setOrders([])
+      }
+    } catch (apiError: any) {
+      console.error('Failed to fetch orders:', apiError)
+      
+      const errorMessage = apiError?.response?.data?.message || 
+                          apiError?.message || 
+                          t('errors.failedToLoadOrders', 'Не удалось загрузить заказы')
+      
+      setError(errorMessage)
+      notification.error(t('errors.failedToLoadOrders', 'Не удалось загрузить заказы'), errorMessage)
+      setOrders([])
     } finally {
       setLoading(false)
     }
@@ -217,22 +129,71 @@ export const OrderHistory: React.FC = () => {
     setExpandedOrders(newExpanded)
   }
 
-  const handleReorder = (order: Order) => {
-    // Simulate adding items to cart
-    console.log('Reordering:', order)
-    alert('Товары добавлены в корзину')
+  const handleReorder = async (order: Order) => {
+    try {
+      await ordersApi.reorder(order.id)
+      notification.success(t('orders.reorderSuccess', 'Товары добавлены в корзину'))
+      // Navigate to cart
+      window.location.href = ROUTES.CART
+    } catch (error) {
+      notification.error(t('orders.reorderFailed', 'Не удалось повторить заказ'))
+    }
   }
 
-  const handleTrackOrder = (trackingNumber: string) => {
-    // Simulate tracking
-    console.log('Tracking:', trackingNumber)
-    alert(`Отслеживание заказа: ${trackingNumber}`)
+  const handleTrackOrder = async (orderId: string, trackingNumber: string) => {
+    try {
+      const response = await ordersApi.getTrackingInfo(orderId)
+      if (response.data?.trackingUrl) {
+        window.open(response.data.trackingUrl, '_blank')
+      } else {
+        notification.info(t('orders.trackingNumber', 'Номер отслеживания'), trackingNumber)
+      }
+    } catch (error) {
+      notification.error(t('orders.trackingFailed', 'Не удалось получить информацию об отслеживании'))
+    }
   }
 
-  const handleDownloadInvoice = (orderNumber: string) => {
-    // Simulate invoice download
-    console.log('Downloading invoice for:', orderNumber)
-    alert(`Скачивание счета для заказа ${orderNumber}`)
+  const handleDownloadInvoice = async (orderId: string, orderNumber: string) => {
+    try {
+      const blob = await ordersApi.downloadInvoice(orderId)
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `invoice-${orderNumber}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+      notification.success(t('orders.invoiceDownloaded', 'Счет скачан'))
+    } catch (error) {
+      notification.error(t('orders.invoiceDownloadFailed', 'Не удалось скачать счет'))
+    }
+  }
+
+  const handleCancelOrder = async (orderId: string) => {
+    notification.confirmAction(
+      t('orders.cancelTitle', 'Отменить заказ?'),
+      t('orders.cancelMessage', 'Вы уверены, что хотите отменить этот заказ?'),
+      async () => {
+        setCancellingOrderId(orderId)
+        try {
+          await ordersApi.cancelOrder(orderId, { reason: 'Customer requested' })
+          notification.success(t('orders.cancelSuccess', 'Заказ успешно отменен'))
+          // Reload orders to get updated status
+          await loadOrders()
+        } catch (error: any) {
+          const message = error?.response?.data?.message || t('orders.cancelFailed', 'Не удалось отменить заказ')
+          notification.error(message)
+        } finally {
+          setCancellingOrderId(null)
+        }
+      }
+    )
+  }
+
+  const handleReportIssue = (orderId: string) => {
+    // Navigate to support page with order ID
+    window.location.href = `/support?orderId=${orderId}`
   }
 
   const filteredOrders = orders
@@ -443,7 +404,7 @@ export const OrderHistory: React.FC = () => {
                     {order.trackingNumber && ['shipped', 'processing'].includes(order.status) && (
                       <button 
                         className="track-btn"
-                        onClick={() => handleTrackOrder(order.trackingNumber!)}
+                        onClick={() => handleTrackOrder(order.id, order.trackingNumber!)}
                       >
                         📍 Отследить
                       </button>
@@ -535,7 +496,7 @@ export const OrderHistory: React.FC = () => {
                     <div className="details-actions">
                       <button 
                         className="download-invoice-btn"
-                        onClick={() => handleDownloadInvoice(order.orderNumber)}
+                        onClick={() => handleDownloadInvoice(order.id, order.orderNumber)}
                       >
                         📄 Скачать счет
                       </button>
@@ -547,14 +508,21 @@ export const OrderHistory: React.FC = () => {
                           >
                             ⭐ Оставить отзыв
                           </Link>
-                          <button className="report-issue-btn">
+                          <button 
+                            className="report-issue-btn"
+                            onClick={() => handleReportIssue(order.id)}
+                          >
                             ⚠️ Сообщить о проблеме
                           </button>
                         </>
                       )}
                       {['processing', 'shipped'].includes(order.status) && (
-                        <button className="cancel-order-btn">
-                          ❌ Отменить заказ
+                        <button 
+                          className="cancel-order-btn"
+                          onClick={() => handleCancelOrder(order.id)}
+                          disabled={cancellingOrderId === order.id}
+                        >
+                          {cancellingOrderId === order.id ? '⏳ Отмена...' : '❌ Отменить заказ'}
                         </button>
                       )}
                     </div>

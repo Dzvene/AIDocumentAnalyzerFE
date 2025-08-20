@@ -1,49 +1,99 @@
+@import '../../styles/themes/variables.scss';
+
 .footer {
-  background-color: #f5f7fa;
-  border-top: 1px solid #e1e5eb;
-  padding: 16px 24px;
+  background-color: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border-primary);
+  padding: 20px 24px;
   margin-top: auto;
 
   &__content {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
   }
 
   &__text {
     font-size: 14px;
-    color: #718096;
+    color: var(--color-text-secondary);
     margin: 0;
+    
+    @media (max-width: 768px) {
+      order: 2;
+    }
   }
 
   &__links {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+      order: 1;
+    }
   }
 
   &__link {
     font-size: 14px;
-    color: #4a90e2;
+    color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
 
     &:hover {
-      color: #2c5aa0;
-      text-decoration: underline;
+      color: var(--color-primary);
+      background-color: var(--color-primary-50);
     }
 
     &:focus {
-      outline: 2px solid #4a90e2;
+      outline: 2px solid var(--color-primary);
       outline-offset: 2px;
-      border-radius: 2px;
     }
   }
 
   &__separator {
-    color: #cbd5e0;
+    color: var(--color-border-secondary);
     font-size: 12px;
+    user-select: none;
+
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+}
+
+// Dark theme support
+[data-theme='dark'] {
+  .footer {
+    background-color: var(--color-bg-secondary);
+    border-top-color: var(--color-border-primary);
+
+    &__text {
+      color: var(--color-text-secondary);
+    }
+
+    &__link {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-primary);
+        background-color: rgba(249, 194, 0, 0.1);
+      }
+    }
+
+    &__separator {
+      color: var(--color-border-secondary);
+    }
   }
 }

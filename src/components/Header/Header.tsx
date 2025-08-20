@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -8,6 +8,8 @@ import { toggleTheme } from '@store/slices/themeSlice'
 import { setCurrentLanguage } from '@store/slices/localizationSlice'
 import { ROUTES } from '@constants/routes'
 import { useNotification } from '@hooks/useNotification'
+import { NotificationsModal } from '@components/NotificationsModal'
+import { notificationsApi } from '@api/notificationsApi'
 // import { LanguageSelector } from '@components/LanguageSelector'
 // import ThemeToggle from '@components/common/ThemeToggle'
 // import LanguageToggle from '@components/common/LanguageToggle'
@@ -21,6 +23,8 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showLangMenu, setShowLangMenu] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0)
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -32,8 +36,24 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const { isDarkMode } = useAppSelector((state) => state.theme)
   const { currentLanguage } = useAppSelector((state) => state.localization)
 
-  // Debug log
-  console.log('Header rendered with theme:', isDarkMode, 'language:', currentLanguage)
+  // Load unread notifications count
+  useEffect(() => {
+    const loadUnreadCount = async () => {
+      if (isAuthenticated) {
+        try {
+          const response = await notificationsApi.getUnreadCount()
+          setUnreadNotificationsCount(response.count)
+        } catch (error) {
+          console.error('Failed to load unread notifications count:', error)
+        }
+      }
+    }
+
+    loadUnreadCount()
+    // Refresh count every minute
+    const interval = setInterval(loadUnreadCount, 60000)
+    return () => clearInterval(interval)
+  }, [isAuthenticated])
 
   const navItems = [
     { path: ROUTES.HOME, label: t('navigation.home') },
@@ -41,8 +61,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
     { path: ROUTES.VENDORS, label: t('navigation.shops') },
     { path: ROUTES.OFFERS, label: t('navigation.offers') },
     // { path: ROUTES.BLOG, label: t('navigation.blog') }, // Временно скрыто
-    { path: ROUTES.ABOUT_US, label: t('navigation.about') },
-    { path: ROUTES.CONTACT_US, label: t('navigation.contact') },
   ]
 
   const toggleMobileMenu = () => {
@@ -159,6 +177,22 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
             {cartItemCount > 0 && <span className="header__cart-count">{cartItemCount}</span>}
           </Link>
 
+          {isAuthenticated && (
+            <button 
+              className="header__notifications-btn" 
+              onClick={() => setShowNotifications(true)}
+              aria-label={t('navigation.notifications')}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {unreadNotificationsCount > 0 && (
+                <span className="header__notifications-count">{unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}</span>
+              )}
+            </button>
+          )}
+
           {isAuthenticated ? (
             <div className="header__user-menu">
               <button 
@@ -225,6 +259,20 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
           </button>
         </div>
       </div>
+      
+      {/* Notifications Modal */}
+      <NotificationsModal 
+        isOpen={showNotifications} 
+        onClose={() => {
+          setShowNotifications(false)
+          // Reload unread count when modal closes
+          if (isAuthenticated) {
+            notificationsApi.getUnreadCount()
+              .then(response => setUnreadNotificationsCount(response.count))
+              .catch(console.error)
+          }
+        }}
+      />
     </header>
   )
 }

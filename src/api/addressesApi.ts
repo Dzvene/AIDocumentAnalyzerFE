@@ -94,50 +94,50 @@ export const addressesApi = {
 
   // Get addresses
   getAddresses: async (): Promise<Address[]> => {
-    return apiClient.get<Address[]>('/addresses')
+    return apiClient.get<Address[]>('/api/addresses')
   },
 
   getUserAddresses: async (userId: string): Promise<Address[]> => {
-    return apiClient.get<Address[]>(`/users/${userId}/addresses`)
+    return apiClient.get<Address[]>(`/api/users/${userId}/addresses`)
   },
   
   // Check if user can add more addresses
   canAddAddress: async (userId: string): Promise<boolean> => {
-    const addresses = await apiClient.get<Address[]>(`/users/${userId}/addresses`)
+    const addresses = await apiClient.get<Address[]>(`/api/users/${userId}/addresses`)
     return addresses.length < addressesApi.MAX_ADDRESSES
   },
 
   getAddressById: async (id: string): Promise<Address> => {
-    return apiClient.get<Address>(`/addresses/${id}`)
+    return apiClient.get<Address>(`/api/addresses/${id}`)
   },
 
   getDefaultAddress: async (): Promise<Address | null> => {
-    return apiClient.get<Address | null>('/addresses/default')
+    return apiClient.get<Address | null>('/api/addresses/default')
   },
 
   // Create address
   createAddress: async (data: CreateAddressRequest): Promise<Address> => {
-    return apiClient.post<Address>('/addresses', data)
+    return apiClient.post<Address>('/api/addresses', data)
   },
 
   // Update address
   updateAddress: async (id: string, data: UpdateAddressRequest): Promise<Address> => {
-    return apiClient.patch<Address>(`/addresses/${id}`, data)
+    return apiClient.patch<Address>(`/api/addresses/${id}`, data)
   },
 
   // Delete address
   deleteAddress: async (id: string): Promise<{ message: string }> => {
-    return apiClient.delete<{ message: string }>(`/addresses/${id}`)
+    return apiClient.delete<{ message: string }>(`/api/addresses/${id}`)
   },
 
   // Set default address
   setDefaultAddress: async (id: string): Promise<Address> => {
-    return apiClient.patch<Address>(`/addresses/${id}/default`)
+    return apiClient.patch<Address>(`/api/addresses/${id}/default`)
   },
 
   // Address validation
   validateAddress: async (data: AddressValidationRequest): Promise<AddressValidationResponse> => {
-    return apiClient.post<AddressValidationResponse>('/addresses/validate', data)
+    return apiClient.post<AddressValidationResponse>('/api/addresses/validate', data)
   },
 
   // Auto-complete address
@@ -156,7 +156,7 @@ export const addressesApi = {
         main_text: string
         secondary_text: string
       }
-    }>>('/addresses/search', {
+    }>>('/api/addresses/search', {
       params: { query, country }
     })
   },
@@ -182,7 +182,7 @@ export const addressesApi = {
         lat: number
         lng: number
       }
-    }>(`/addresses/details/${placeId}`)
+    }>(`/api/addresses/details/${placeId}`)
   },
 
   // Shipping zones and methods
@@ -207,7 +207,7 @@ export const addressesApi = {
       price: number
       carrier?: string
       trackingAvailable: boolean
-    }>>(`/addresses/${addressId}/shipping-methods`)
+    }>>(`/api/addresses/${addressId}/shipping-methods`)
   },
 
   calculateShippingCost: async (params: {
@@ -255,7 +255,7 @@ export const addressesApi = {
       distance: number
       duration: number
       unit: 'km' | 'miles'
-    }>('/addresses/distance', { from, to })
+    }>('/api/addresses/distance', { from, to })
   },
 
   // Bulk operations
@@ -272,7 +272,7 @@ export const addressesApi = {
         index: number
         error: string
       }>
-    }>('/addresses/bulk', { addresses })
+    }>('/api/addresses/bulk', { addresses })
   },
 
   bulkDeleteAddresses: async (addressIds: string[]): Promise<{
@@ -282,7 +282,7 @@ export const addressesApi = {
     return apiClient.post<{
       message: string
       deletedCount: number
-    }>('/addresses/bulk-delete', { addressIds })
+    }>('/api/addresses/bulk-delete', { addressIds })
   },
 
   // Admin endpoints
@@ -303,12 +303,12 @@ export const addressesApi = {
       total: number
       page: number
       totalPages: number
-    }>('/admin/addresses', { params })
+    }>('/api/admin/addresses', { params })
   },
 
   // Import/Export
   exportAddresses: async (format: 'csv' | 'json' | 'xlsx'): Promise<Blob> => {
-    return apiClient.get<Blob>(`/addresses/export?format=${format}`, {
+    return apiClient.get<Blob>(`/api/addresses/export?format=${format}`, {
       responseType: 'blob'
     })
   },
@@ -329,7 +329,7 @@ export const addressesApi = {
         row: number
         error: string
       }>
-    }>('/addresses/import', formData, {
+    }>('/api/addresses/import', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
