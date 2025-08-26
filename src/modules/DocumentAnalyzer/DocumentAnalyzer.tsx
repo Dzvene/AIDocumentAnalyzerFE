@@ -461,6 +461,73 @@ const DocumentAnalyzer: React.FC = () => {
               <p>{analysisResult.summary}</p>
             </div>
 
+            {/* Checked Items Section - NEW */}
+            {analysisResult.checked_items && Object.keys(analysisResult.checked_items).length > 0 && (
+              <div className="checked-items-section">
+                <h3>📝 Результаты проверки по пунктам</h3>
+                <div className="checked-items-grid">
+                  {Object.entries(analysisResult.checked_items).map(([checkId, checkData]: [string, any]) => (
+                    <div key={checkId} className={`check-item ${checkData.found ? 'found' : 'not-found'}`}>
+                      <div className="check-header">
+                        <span className="check-status">
+                          {checkData.found ? '✅' : '❌'}
+                        </span>
+                        <span className="check-label">{checkData.label}</span>
+                        {checkData.risk_level && checkData.risk_level !== 'none' && (
+                          <span className={`risk-badge risk-${checkData.risk_level}`}>
+                            {checkData.risk_level === 'high' ? 'Высокий риск' :
+                             checkData.risk_level === 'medium' ? 'Средний риск' : 
+                             'Низкий риск'}
+                          </span>
+                        )}
+                      </div>
+                      <div className="check-details">
+                        {checkData.found ? (
+                          <>
+                            <p className="check-text">{checkData.details}</p>
+                            {checkData.quote && (
+                              <blockquote className="check-quote">
+                                "{checkData.quote}"
+                              </blockquote>
+                            )}
+                            {checkData.recommendation && (
+                              <div className="check-recommendation">
+                                <strong>Рекомендация:</strong> {checkData.recommendation}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <p className="not-found-text">Информация по данному пункту не найдена в документе</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Custom Analysis Section - NEW */}
+            {analysisResult.custom_analysis && (
+              <div className="custom-analysis-section">
+                <h3>❓ Ответ на дополнительный вопрос</h3>
+                <div className="custom-question">
+                  <strong>Вопрос:</strong> {analysisResult.custom_analysis.question}
+                </div>
+                <div className="custom-answer">
+                  <p>{analysisResult.custom_analysis.answer}</p>
+                  {analysisResult.custom_analysis.relevant_quotes && 
+                   analysisResult.custom_analysis.relevant_quotes.length > 0 && (
+                    <div className="relevant-quotes">
+                      <strong>Релевантные цитаты:</strong>
+                      {analysisResult.custom_analysis.relevant_quotes.map((quote: string, i: number) => (
+                        <blockquote key={i}>"{quote}"</blockquote>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="risks-section">
               <h3>⚠️ Обнаруженные риски и важные условия</h3>
               {analysisResult.risks && analysisResult.risks.length > 0 ? (
