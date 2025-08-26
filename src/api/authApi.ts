@@ -1,138 +1,81 @@
-import { apiClient } from './config'
-import { 
-  LoginRequest,
-  RegisterRequest,
-  LoginResponse,
-  RegisterResponse,
-  RefreshResponse,
-  MeResponse,
-  ChangePasswordRequest,
-  ResetPasswordRequest,
-  ForgotPasswordRequest,
-  Enable2FAResponse,
-  Verify2FARequest,
-  ConfirmEmailRequest,
-  ResendEmailConfirmationRequest,
-  ApiResponse,
-  UserInfo,
-  AuthResponse,
-  RefreshTokenRequest
-} from '@types/dto/auth.dto'
+import { authAPI } from './auth.api';
 
+// Re-export the authAPI as authApi for backward compatibility
 export const authApi = {
-  // Core authentication
-  register: async (data: RegisterRequest): Promise<AuthResponse> => {
-    // Бэкенд возвращает AuthResponse напрямую, не в обертке ApiResponse
-    return apiClient.post<AuthResponse>('/api/auth-module/register', data)
-  },
-
-  login: async (credentials: LoginRequest): Promise<AuthResponse> => {
-    return apiClient.post<AuthResponse>('/api/auth-module/login', credentials)
-  },
-
-  refresh: async (): Promise<AuthResponse> => {
-    // The refresh logic is handled in the axios interceptor
-    // This is for manual refresh if needed
-    return apiClient.post<AuthResponse>('/api/auth-module/refresh')
-  },
-
-  logout: async (): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/logout')
-  },
-
-  getCurrentUser: async (): Promise<MeResponse> => {
-    return apiClient.get<MeResponse>('/api/auth-module/me')
-  },
-
-  // Password management
-  changePassword: async (data: ChangePasswordRequest): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/change-password', data)
-  },
-
-  forgotPassword: async (data: ForgotPasswordRequest): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/forgot-password', data)
-  },
-
-  resetPassword: async (data: ResetPasswordRequest): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/reset-password', data)
-  },
-
-  // Two-factor authentication
-  enable2FA: async (): Promise<ApiResponse<Enable2FAResponse>> => {
-    return apiClient.post<ApiResponse<Enable2FAResponse>>('/api/auth-module/2fa/enable')
-  },
-
-  verify2FA: async (data: Verify2FARequest): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/2fa/verify', data)
-  },
-  
-  verifyTwoFactor: async (data: { tempToken: string; code: string }): Promise<AuthResponse> => {
-    return apiClient.post<AuthResponse>('/api/auth-module/2fa/verify-login', data)
-  },
-  
-  refreshToken: async (data: RefreshTokenRequest): Promise<AuthResponse> => {
-    return apiClient.post<AuthResponse>('/api/auth-module/refresh', data)
-  },
-
-  disable2FA: async (code: string): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/2fa/disable', { code })
-  },
-
-  // Email confirmation
-  confirmEmail: async (data: ConfirmEmailRequest): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/confirm-email', data)
-  },
-
-  resendEmailConfirmation: async (data: ResendEmailConfirmationRequest): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/resend-confirmation', data)
-  },
-
-  // Validation endpoints
-  checkEmailAvailability: async (email: string): Promise<ApiResponse<{ available: boolean }>> => {
-    return apiClient.get<ApiResponse<{ available: boolean }>>(`/api/auth-module/check-email/${email}`)
-  },
-
-  checkUsernameAvailability: async (username: string): Promise<ApiResponse<{ available: boolean }>> => {
-    return apiClient.get<ApiResponse<{ available: boolean }>>(`/api/auth-module/check-username/${username}`)
-  },
-
-  // User profile update
-  updateProfile: async (data: Partial<UserInfo>): Promise<ApiResponse<UserInfo>> => {
-    return apiClient.put<ApiResponse<UserInfo>>('/api/auth-module/profile', data)
-  },
-
-  // Avatar management
-  uploadAvatar: async (file: File): Promise<ApiResponse<{ avatarUrl: string }>> => {
-    const formData = new FormData()
-    formData.append('avatar', file)
-    return apiClient.post<ApiResponse<{ avatarUrl: string }>>('/api/auth-module/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+  login: async (credentials: { email: string; password: string }) => {
+    const response = await authAPI.login(credentials);
+    return {
+      data: {
+        user: {
+          id: response.user.id,
+          email: response.user.email,
+          name: response.user.full_name || response.user.username,
+          role: response.user.is_superuser ? 'admin' : 'user',
+        },
+        token: response.access_token,
+        refreshToken: response.access_token, // Using same token for now
       }
-    })
+    };
   },
-
-  deleteAvatar: async (): Promise<ApiResponse> => {
-    return apiClient.delete<ApiResponse>('/api/auth-module/avatar')
+  
+  register: async (userData: { email: string; password: string; name: string }) => {
+    const response = await authAPI.register({
+      email: userData.email,
+      password: userData.password,
+      full_name: userData.name,
+    });
+    return {
+      data: {
+        user: {
+          id: response.user.id,
+          email: response.user.email,
+          name: response.user.full_name || response.user.username,
+          role: response.user.is_superuser ? 'admin' : 'user',
+        },
+        token: response.access_token,
+        refreshToken: response.access_token,
+      }
+    };
   },
-
-  // Session management
-  getSessions: async (): Promise<ApiResponse<Array<{
-    id: string
-    device: string
-    browser: string
-    ipAddress: string
-    lastActive: string
-    current: boolean
-  }>>> => {
-    return apiClient.get<ApiResponse<Array<any>>>('/api/auth-module/sessions')
+  
+  logout: async () => {
+    await authAPI.logout();
   },
-
-  revokeSession: async (sessionId: string): Promise<ApiResponse> => {
-    return apiClient.delete<ApiResponse>(`/api/auth-module/sessions/${sessionId}`)
+  
+  refreshToken: async () => {
+    // For now, just get the current user profile as a refresh check
+    const user = await authAPI.getProfile();
+    return {
+      data: {
+        token: localStorage.getItem('token') || '',
+        refreshToken: localStorage.getItem('refreshToken') || '',
+      }
+    };
   },
+  
+  checkAuth: async () => {
+    const user = await authAPI.getProfile();
+    return {
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.full_name || user.username,
+          role: user.is_superuser ? 'admin' : 'user',
+        }
+      }
+    };
+  },
+  
+  forgotPassword: async (data: { email: string }) => {
+    await authAPI.requestPasswordReset(data.email);
+    return { data: { message: 'Password reset email sent' } };
+  },
+  
+  resetPassword: async (token: string, password: string) => {
+    await authAPI.resetPassword(token, password);
+    return { data: { message: 'Password reset successful' } };
+  },
+};
 
-  revokeAllSessions: async (): Promise<ApiResponse> => {
-    return apiClient.post<ApiResponse>('/api/auth-module/sessions/revoke-all')
-  }
-}
+export default authApi;

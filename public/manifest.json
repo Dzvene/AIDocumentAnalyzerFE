@@ -1,7 +1,7 @@
 {
-  "name": "Base Project Admin UI",
-  "short_name": "Base Admin",
-  "description": "Base Admin UI - Modern administrative interface for project management",
+  "name": "AI Document Analyzer",
+  "short_name": "AI Doc Analyzer",
+  "description": "AI Document Analyzer - Advanced document processing and analysis platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

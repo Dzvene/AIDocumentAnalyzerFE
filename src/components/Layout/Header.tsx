@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { RootState } from '@store/index'
-import { logoutAsync } from '@store/slices/authSlice'
+import { logout } from '@store/slices/authSlice'
 import ThemeToggle from '@components/common/ThemeToggle'
 import LanguageToggle from '@components/common/LanguageToggle'
 
@@ -22,7 +22,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutAsync()).unwrap()
+      await dispatch(logout()).unwrap()
       navigate('/')
     } catch (error) {
       console.error('Logout failed:', error)

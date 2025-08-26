@@ -3,35 +3,70 @@
 @import './base/reset';
 @import './base/typography';
 
-// Base styles
+// Mobile First Base Styles
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px; // Base font size for mobile
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-family-sans);
   color: var(--color-text-primary);
   background-color: var(--color-bg-secondary);
-  line-height: var(--line-height-normal);
-  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  font-size: 0.9375rem; // 15px on mobile
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+
+  @media (min-width: 768px) {
+    font-size: 1rem; // 16px on tablet and up
+    line-height: var(--line-height-normal);
+  }
 }
 
 #root {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
 }
 
-// Utility classes
+// Mobile First Responsive Container
 .container {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 1rem;
+
+  @media (min-width: 480px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 0 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 960px;
+    padding: 0 var(--spacing-md);
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 1140px;
+  }
+
+  @media (min-width: 1440px) {
+    max-width: 1200px;
+  }
 }
 
 .flex {
@@ -219,7 +254,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .block {
@@ -228,6 +263,40 @@ body {
 
 .inline-block {
   display: inline-block;
+}
+
+// Mobile First Responsive Display Utilities
+@media (min-width: 480px) {
+  .sm\:hidden {
+    display: none !important;
+  }
+  .sm\:block {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:hidden {
+    display: none !important;
+  }
+  .md\:block {
+    display: block;
+  }
+  .md\:flex {
+    display: flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:hidden {
+    display: none !important;
+  }
+  .lg\:block {
+    display: block;
+  }
+  .lg\:flex {
+    display: flex;
+  }
 }
 
 .cursor-pointer {
@@ -250,6 +319,128 @@ body {
   transition: all 0.2s ease-in-out;
 }
 
+// Touch-friendly interaction states
+@media (hover: hover) {
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  .hover\:shadow-lg:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// Mobile-optimized buttons and clickable elements
+a,
+button,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Ensure proper touch targets (minimum 44x44px)
+button,
+a.btn,
+.btn {
+  min-height: 44px;
+  min-width: 44px;
+  
+  @media (min-width: 768px) {
+    min-height: auto;
+    min-width: auto;
+  }
+}
+
+// Form elements optimization for mobile
+input,
+textarea,
+select {
+  font-size: 16px; // Prevents zoom on iOS
+  
+  @media (min-width: 768px) {
+    font-size: inherit;
+  }
+}
+
+// Responsive text utilities
+.text-xs {
+  font-size: 0.75rem;
+  
+  @media (min-width: 768px) {
+    font-size: 0.8125rem;
+  }
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  
+  @media (min-width: 768px) {
+    font-size: 0.9375rem;
+  }
+}
+
+.text-base {
+  font-size: 1rem;
+  
+  @media (min-width: 768px) {
+    font-size: 1.0625rem;
+  }
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+// Responsive spacing utilities
+.mt-auto {
+  margin-top: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mr-auto {
+  margin-right: auto;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -260,4 +451,74 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+// Responsive grid utilities
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 480px) {
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+// Ensure images are responsive
+img,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+// Prevent horizontal scroll
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Safe area insets for modern mobile devices
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right);
 }

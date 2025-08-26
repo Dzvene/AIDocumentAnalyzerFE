@@ -1,1 +1,0 @@
-export { AllShops } from './AllShops'

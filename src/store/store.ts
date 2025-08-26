@@ -2,56 +2,28 @@ import { configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import authSlice from './slices/authSlice'
+import authReducer from './slices/authSlice'
 import themeSlice from './slices/themeSlice'
 import notificationSlice from './slices/notificationSlice'
-import localizationSlice from './slices/localizationSlice'
-import shopsSlice from './slices/shopsSlice'
-import ordersSlice from './slices/ordersSlice'
-import usersSlice from './slices/usersSlice'
-import adminSlice from './slices/adminSlice'
-import wishlistSlice from './slices/wishlistSlice'
-import addressesSlice from './slices/addressesSlice'
-import reviewsSlice from './slices/reviewsSlice'
-import searchSlice from './slices/searchSlice'
-import categoriesSlice from './slices/categoriesSlice'
-import blogSlice from './slices/blogSlice'
-import offersSlice from './slices/offersSlice'
-import paymentSlice from './slices/paymentSlice'
-import locationSlice from './slices/locationSlice'
-import multiCartSlice from './slices/multiCartSlice'
-import deliverySlice from './slices/deliverySlice'
-import shoppingListSlice from './slices/shoppingListSlice'
-import advertisingSlice from './slices/advertisingSlice'
+import documentsSlice from './slices/documentsSlice'
+import analysisSlice from './slices/analysisSlice'
 
-const persistConfig = {
-  key: 'root',
+const authPersistConfig = {
+  key: 'auth',
   storage,
-  whitelist: ['auth', 'theme', 'localization', 'wishlist', 'search', 'addresses', 'location', 'multiCart', 'shoppingList', 'advertising'],
+}
+
+const themePersistConfig = {
+  key: 'theme',
+  storage,
 }
 
 const rootReducer = {
-  auth: persistReducer(persistConfig, authSlice),
-  theme: themeSlice,
+  auth: persistReducer(authPersistConfig, authReducer),
+  theme: persistReducer(themePersistConfig, themeSlice),
   notification: notificationSlice,
-  localization: localizationSlice,
-  shops: shopsSlice,
-  orders: ordersSlice,
-  users: usersSlice,
-  admin: adminSlice,
-  wishlist: persistReducer(persistConfig, wishlistSlice),
-  addresses: persistReducer(persistConfig, addressesSlice),
-  reviews: reviewsSlice,
-  search: persistReducer(persistConfig, searchSlice),
-  categories: categoriesSlice,
-  blog: blogSlice,
-  offers: offersSlice,
-  payment: paymentSlice,
-  location: persistReducer(persistConfig, locationSlice),
-  multiCart: persistReducer(persistConfig, multiCartSlice),
-  delivery: deliverySlice,
-  shoppingList: persistReducer(persistConfig, shoppingListSlice),
-  advertising: persistReducer(persistConfig, advertisingSlice),
+  documents: documentsSlice,
+  analysis: analysisSlice,
 }
 
 export const store = configureStore({

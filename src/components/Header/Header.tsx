@@ -1,278 +1,126 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import { logoutAsync } from '@store/slices/authSlice'
-import { selectTotalItemsCount } from '@store/slices/multiCartSlice'
+import { logout } from '@store/slices/authSlice'
 import { toggleTheme } from '@store/slices/themeSlice'
-import { setCurrentLanguage } from '@store/slices/localizationSlice'
-import { ROUTES } from '@constants/routes'
-import { useNotification } from '@hooks/useNotification'
-import { NotificationsModal } from '@components/NotificationsModal'
-import { notificationsApi } from '@api/notificationsApi'
-// import { LanguageSelector } from '@components/LanguageSelector'
-// import ThemeToggle from '@components/common/ThemeToggle'
-// import LanguageToggle from '@components/common/LanguageToggle'
 import './Header.scss'
 
-interface HeaderProps {
-  onMenuToggle?: () => void
-}
-
-export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
+export const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [showUserMenu, setShowUserMenu] = useState(false)
-  const [showLangMenu, setShowLangMenu] = useState(false)
-  const [showNotifications, setShowNotifications] = useState(false)
-  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0)
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const notification = useNotification()
-  const { t, i18n } = useTranslation()
   
   const { isAuthenticated, user } = useAppSelector((state) => state.auth)
-  const cartItemCount = useAppSelector(selectTotalItemsCount)
   const { isDarkMode } = useAppSelector((state) => state.theme)
-  const { currentLanguage } = useAppSelector((state) => state.localization)
 
-  // Load unread notifications count
-  useEffect(() => {
-    const loadUnreadCount = async () => {
-      if (isAuthenticated) {
-        try {
-          const response = await notificationsApi.getUnreadCount()
-          setUnreadNotificationsCount(response.count)
-        } catch (error) {
-          console.error('Failed to load unread notifications count:', error)
-        }
-      }
-    }
-
-    loadUnreadCount()
-    // Refresh count every minute
-    const interval = setInterval(loadUnreadCount, 60000)
-    return () => clearInterval(interval)
-  }, [isAuthenticated])
-
-  const navItems = [
-    { path: ROUTES.HOME, label: t('navigation.home') },
-    // { path: ROUTES.CATEGORIES, label: t('navigation.categories') }, // Временно скрыто
-    { path: ROUTES.VENDORS, label: t('navigation.shops') },
-    { path: ROUTES.OFFERS, label: t('navigation.offers') },
-    // { path: ROUTES.BLOG, label: t('navigation.blog') }, // Временно скрыто
-  ]
+  const handleLogout = async () => {
+    await dispatch(logout())
+    navigate('/login')
+  }
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
-
-  const handleLogout = async () => {
-    try {
-      await dispatch(logoutAsync()).unwrap()
-      notification.success(t('auth.logoutSuccess'))
-      navigate(ROUTES.HOME)
-    } catch (error) {
-      notification.error(t('errors.generic'))
-    }
   }
 
   const handleThemeToggle = () => {
     dispatch(toggleTheme())
   }
 
-  const handleLanguageChange = async (lang: string) => {
-    dispatch(setCurrentLanguage(lang))
-    await i18n.changeLanguage(lang)
-    setShowLangMenu(false)
-  }
-
-  const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'pl', name: 'Polski', flag: '🇵🇱' }
+  const navLinks = [
+    { path: '/', label: 'Главная', public: true },
+    { path: '/dashboard', label: 'Панель управления', public: false },
+    { path: '/upload', label: 'Загрузить', public: false },
+    { path: '/about', label: 'О нас', public: true },
+    { path: '/pricing', label: 'Тарифы', public: true },
   ]
 
-  const currentLang = languages.find(l => l.code === currentLanguage) || languages[0]
+  const isActive = (path: string) => {
+    return location.pathname === path
+  }
 
   return (
     <header className="header">
       <div className="header__container">
-        <div className="header__left">
-          <Link to={ROUTES.HOME} className="header__logo">
-            <span className="header__logo-text">OnLimitShop</span>
-          </Link>
-        </div>
-        
-        <nav className={`header__nav ${isMobileMenuOpen ? 'header__nav--mobile-open' : ''}`}>
+        <Link to="/" className="header__logo">
+          <span className="header__logo-icon">🤖</span>
+          <span className="header__logo-text">AI Document Analyzer</span>
+        </Link>
+
+        <nav className={`header__nav ${isMobileMenuOpen ? 'header__nav--open' : ''}`}>
           <ul className="header__nav-list">
-            {navItems.map((item) => (
-              <li key={item.path} className="header__nav-item">
-                <Link 
-                  to={item.path} 
-                  className={`header__nav-link ${location.pathname === item.path ? 'header__nav-link--active' : ''}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {navLinks.map(link => {
+              if (!link.public && !isAuthenticated) return null
+              
+              return (
+                <li key={link.path} className="header__nav-item">
+                  <Link 
+                    to={link.path} 
+                    className={`header__nav-link ${isActive(link.path) ? 'header__nav-link--active' : ''}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </nav>
 
-        <div className="header__right">
-          {/* TODO: Implement theme toggle
+        <div className="header__actions">
           <button 
-            className="header__theme-btn"
+            className="header__theme-toggle"
             onClick={handleThemeToggle}
             aria-label="Toggle theme"
-            title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {isDarkMode ? '☀️' : '🌙'}
           </button>
-          */}
-          
-          {/* Language Toggle Button */}
-          <div className="header__lang-wrapper">
-            <button 
-              className="header__lang-btn"
-              onClick={() => setShowLangMenu(!showLangMenu)}
-              aria-label="Toggle language"
-            >
-              {currentLang.flag} {currentLang.code.toUpperCase()}
-            </button>
-            
-            {showLangMenu && (
-              <div className="header__lang-dropdown">
-                {languages.map(lang => (
-                  <button
-                    key={lang.code}
-                    className={`header__lang-option ${lang.code === currentLanguage ? 'header__lang-option--active' : ''}`}
-                    onClick={() => handleLanguageChange(lang.code)}
-                  >
-                    {lang.flag} {lang.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          <Link to={ROUTES.SEARCH} className="header__search-btn" aria-label={t('common.search')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11.7659" cy="11.7666" r="8.98856" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M18.0176 18.4852L21.5416 22.0001" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
-          
-          <Link to={ROUTES.CART} className="header__cart-btn" aria-label={t('navigation.cart')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            {cartItemCount > 0 && <span className="header__cart-count">{cartItemCount}</span>}
-          </Link>
-
-          {isAuthenticated && (
-            <button 
-              className="header__notifications-btn" 
-              onClick={() => setShowNotifications(true)}
-              aria-label={t('navigation.notifications')}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              {unreadNotificationsCount > 0 && (
-                <span className="header__notifications-count">{unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}</span>
-              )}
-            </button>
-          )}
 
           {isAuthenticated ? (
-            <div className="header__user-menu">
+            <div className="header__user">
+              <div className="header__user-info">
+                <span className="header__user-avatar">
+                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                </span>
+                <span className="header__user-name">{user?.name || 'User'}</span>
+              </div>
               <button 
-                className="header__user-btn"
-                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="header__logout-btn"
+                onClick={handleLogout}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span className="header__user-text">{user?.name || t('navigation.profile')}</span>
+                Выйти
               </button>
-              
-              {showUserMenu && (
-                <div className="header__dropdown">
-                  <Link 
-                    to={ROUTES.USER_DASHBOARD} 
-                    className="header__dropdown-item"
-                    onClick={() => setShowUserMenu(false)}
-                  >
-                    {t('navigation.dashboard')}
-                  </Link>
-                  <Link 
-                    to={ROUTES.USER_ORDERS} 
-                    className="header__dropdown-item"
-                    onClick={() => setShowUserMenu(false)}
-                  >
-                    {t('navigation.orders')}
-                  </Link>
-                  <Link 
-                    to={ROUTES.USER_PROFILE} 
-                    className="header__dropdown-item"
-                    onClick={() => setShowUserMenu(false)}
-                  >
-                    {t('profile.settings')}
-                  </Link>
-                  <button 
-                    className="header__dropdown-item header__dropdown-item--logout"
-                    onClick={handleLogout}
-                  >
-                    {t('common.logout')}
-                  </button>
-                </div>
-              )}
             </div>
           ) : (
-            <Link to={ROUTES.LOGIN} className="header__user-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span className="header__user-text">{t('common.login')}</span>
-            </Link>
+            <div className="header__auth-buttons">
+              <Link 
+                to="/login" 
+                className="header__login-btn"
+              >
+                Войти
+              </Link>
+              <Link 
+                to="/register" 
+                className="header__register-btn"
+              >
+                Регистрация
+              </Link>
+            </div>
           )}
 
           <button 
-            className="header__menu-toggle"
+            className="header__mobile-toggle"
             onClick={toggleMobileMenu}
-            aria-label={t('common.menu')}
+            aria-label="Toggle mobile menu"
           >
-            <span className={`header__menu-icon ${isMobileMenuOpen ? 'header__menu-icon--open' : ''}`}></span>
-            <span className={`header__menu-icon ${isMobileMenuOpen ? 'header__menu-icon--open' : ''}`}></span>
-            <span className={`header__menu-icon ${isMobileMenuOpen ? 'header__menu-icon--open' : ''}`}></span>
+            <span className={`header__burger ${isMobileMenuOpen ? 'header__burger--open' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
           </button>
         </div>
       </div>
-      
-      {/* Notifications Modal */}
-      <NotificationsModal 
-        isOpen={showNotifications} 
-        onClose={() => {
-          setShowNotifications(false)
-          // Reload unread count when modal closes
-          if (isAuthenticated) {
-            notificationsApi.getUnreadCount()
-              .then(response => setUnreadNotificationsCount(response.count))
-              .catch(console.error)
-          }
-        }}
-      />
     </header>
   )
 }

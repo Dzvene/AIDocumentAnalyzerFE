@@ -1,1 +1,0 @@
-export { UserAddresses } from './UserAddresses'

@@ -1,8 +1,8 @@
-export const APP_NAME = 'OnLimitShop'
+export const APP_NAME = 'AI Document Analyzer'
 
 export const DEFAULT_PAGE_SIZE = 20
 
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5050'
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5055/api'
 
 export const TOKEN_STORAGE_KEY = 'auth_token'
 export const REFRESH_TOKEN_STORAGE_KEY = 'refresh_token'

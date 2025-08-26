@@ -1,287 +1,189 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { authApi } from '@api/authApi'
-import { 
-  AuthState, 
-  User, 
-  LoginRequest, 
-  RegisterRequest, 
-  AuthResponse, 
-  RefreshTokenRequest,
-  AuthApiError 
-} from '@types/interfaces/auth'
-import { setToken, setRefreshToken, setStoredUser, clearAuthData, getToken, getRefreshToken, getStoredUser } from '@utils/auth'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { authApi } from '@api/authApi';
+import type { RootState } from '@store/store';
 
-// Загружаем сохраненного пользователя и токен при инициализации
-const storedUser = getStoredUser()
-const token = getToken()
-
-const initialState: AuthState = {
-  user: storedUser,
-  isAuthenticated: !!(storedUser && token),
-  isLoading: false,
-  error: null,
+interface User {
+  id: string | number;
+  email: string;
+  name: string;
+  role: string;
 }
 
-// Async thunks
-export const loginAsync = createAsyncThunk(
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+// Check for existing auth data on initialization
+const existingToken = localStorage.getItem('token');
+const existingRefreshToken = localStorage.getItem('refreshToken');
+const existingUserData = localStorage.getItem('user_data');
+
+let initialUser = null;
+if (existingUserData) {
+  try {
+    initialUser = JSON.parse(existingUserData);
+  } catch (error) {
+    console.error('Failed to parse stored user data:', error);
+    localStorage.removeItem('user_data');
+  }
+}
+
+const initialState: AuthState = {
+  user: initialUser,
+  token: existingToken,
+  refreshToken: existingRefreshToken,
+  isAuthenticated: !!(existingToken && initialUser),
+  isLoading: false,
+  error: null,
+};
+
+export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: LoginRequest, { rejectWithValue }) => {
-    try {
-      const response = await authApi.login(credentials)
-      
-      // Check if 2FA is required
-      if ('requiresTwoFactor' in response && response.requiresTwoFactor) {
-        return response // Return 2FA response
-      }
-      
-      // Normal login flow
-      if ('accessToken' in response) {
-        setToken(response.accessToken)
-        setRefreshToken(response.refreshToken)
-        setStoredUser(response.user)
-      }
-      
-      return response
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 
-                          error.message || 
-                          'Login failed'
-      return rejectWithValue(errorMessage)
-    }
+  async (credentials: { email: string; password: string }) => {
+    const response = await authApi.login(credentials);
+    return response.data;
   }
-)
+);
 
-export const verifyTwoFactorAsync = createAsyncThunk(
-  'auth/verifyTwoFactor',
-  async (data: { tempToken: string; code: string }, { rejectWithValue }) => {
-    try {
-      const response = await authApi.verifyTwoFactor(data)
-      
-      setToken(response.accessToken)
-      setRefreshToken(response.refreshToken)
-      setStoredUser(response.user)
-      
-      return response
-    } catch (error: any) {
-      const errorData = error.response?.data as AuthApiError
-      return rejectWithValue(errorData?.message || '2FA verification failed')
-    }
-  }
-)
-
-export const registerAsync = createAsyncThunk(
+export const register = createAsyncThunk(
   'auth/register',
-  async (data: RegisterRequest, { rejectWithValue }) => {
-    try {
-      const response = await authApi.register(data)
-      
-      setToken(response.accessToken)
-      setRefreshToken(response.refreshToken)
-      setStoredUser(response.user)
-      
-      return response
-    } catch (error: any) {
-      const errorData = error.response?.data as AuthApiError
-      return rejectWithValue(errorData?.message || 'Registration failed')
-    }
+  async (userData: { email: string; password: string; name: string }) => {
+    const response = await authApi.register(userData);
+    return response.data;
   }
-)
+);
 
-export const refreshTokenAsync = createAsyncThunk(
+export const logout = createAsyncThunk('auth/logout', async () => {
+  await authApi.logout();
+});
+
+export const refreshTokenThunk = createAsyncThunk(
   'auth/refreshToken',
-  async (_, { rejectWithValue }) => {
-    try {
-      const accessToken = getToken()
-      const refreshToken = getRefreshToken()
-      
-      if (!accessToken || !refreshToken) {
-        throw new Error('No tokens available')
-      }
-
-      const tokenData: RefreshTokenRequest = {
-        accessToken,
-        refreshToken
-      }
-      
-      const response = await authApi.refreshToken(tokenData)
-      
-      setToken(response.accessToken)
-      setRefreshToken(response.refreshToken)
-      setStoredUser(response.user)
-      
-      return response
-    } catch (error: any) {
-      clearAuthData()
-      const errorData = error.response?.data as AuthApiError
-      return rejectWithValue(errorData?.message || 'Token refresh failed')
-    }
+  async () => {
+    const response = await authApi.refreshToken();
+    return response.data;
   }
-)
+);
 
-export const logoutAsync = createAsyncThunk(
-  'auth/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      await authApi.logout()
-      clearAuthData()
-    } catch (error: any) {
-      // Clear data even if logout request fails
-      clearAuthData()
-      const errorData = error.response?.data as AuthApiError
-      return rejectWithValue(errorData?.message || 'Logout failed')
-    }
-  }
-)
-
-export const getCurrentUserAsync = createAsyncThunk(
-  'auth/getCurrentUser',
-  async (_, { rejectWithValue }) => {
-    try {
-      const user = await authApi.getCurrentUser()
-      setStoredUser(user)
-      return user
-    } catch (error: any) {
-      const errorData = error.response?.data as AuthApiError
-      return rejectWithValue(errorData?.message || 'Failed to get user')
-    }
-  }
-)
+export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
+  const response = await authApi.checkAuth();
+  return response.data;
+});
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    clearError: (state) => {
-      state.error = null
-    },
-    setUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload
-      state.isAuthenticated = true
+    setCredentials: (
+      state,
+      action: PayloadAction<{ user: User; token: string; refreshToken: string }>
+    ) => {
+      const { user, token, refreshToken } = action.payload;
+      state.user = user;
+      state.token = token;
+      state.refreshToken = refreshToken;
+      state.isAuthenticated = true;
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('user_data', JSON.stringify(user));
     },
     clearAuth: (state) => {
-      state.user = null
-      state.isAuthenticated = false
-      state.error = null
-      clearAuthData()
+      state.user = null;
+      state.token = null;
+      state.refreshToken = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user_data');
+    },
+    setError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
-    // Login
     builder
-      .addCase(loginAsync.pending, (state) => {
-        state.isLoading = true
-        state.error = null
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       })
-      .addCase(loginAsync.fulfilled, (state, action) => {
-        state.isLoading = false
-        // Check if 2FA is required
-        if ('requiresTwoFactor' in action.payload && action.payload.requiresTwoFactor) {
-          // Don't set authenticated yet, waiting for 2FA
-          state.error = null
-        } else {
-          // Normal login success
-          state.user = action.payload.user
-          state.isAuthenticated = true
-          state.error = null
-        }
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        state.isAuthenticated = true;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem('user_data', JSON.stringify(action.payload.user));
       })
-      .addCase(loginAsync.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-        state.isAuthenticated = false
-        state.user = null
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Login failed';
       })
-
-    // Verify 2FA
-    builder
-      .addCase(verifyTwoFactorAsync.pending, (state) => {
-        state.isLoading = true
-        state.error = null
+      .addCase(register.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       })
-      .addCase(verifyTwoFactorAsync.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.user = action.payload.user
-        state.isAuthenticated = true
-        state.error = null
+      .addCase(register.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        state.isAuthenticated = true;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem('user_data', JSON.stringify(action.payload.user));
       })
-      .addCase(verifyTwoFactorAsync.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
+      .addCase(register.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Registration failed';
       })
-
-    // Register
-    builder
-      .addCase(registerAsync.pending, (state) => {
-        state.isLoading = true
-        state.error = null
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
+        state.refreshToken = null;
+        state.isAuthenticated = false;
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user_data');
       })
-      .addCase(registerAsync.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.user = action.payload.user
-        state.isAuthenticated = true
-        state.error = null
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        localStorage.setItem('user_data', JSON.stringify(action.payload.user));
       })
-      .addCase(registerAsync.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-        state.isAuthenticated = false
-        state.user = null
+      .addCase(checkAuth.rejected, (state) => {
+        state.user = null;
+        state.token = null;
+        state.refreshToken = null;
+        state.isAuthenticated = false;
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user_data');
       })
-
-    // Refresh Token
-    builder
-      .addCase(refreshTokenAsync.pending, (state) => {
-        // Don't set loading for background token refresh
-      })
-      .addCase(refreshTokenAsync.fulfilled, (state, action) => {
-        state.user = action.payload.user
-        state.isAuthenticated = true
-        state.error = null
-      })
-      .addCase(refreshTokenAsync.rejected, (state, action) => {
-        state.error = action.payload as string
-        state.isAuthenticated = false
-        state.user = null
-      })
-
-    // Logout
-    builder
-      .addCase(logoutAsync.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(logoutAsync.fulfilled, (state) => {
-        state.isLoading = false
-        state.user = null
-        state.isAuthenticated = false
-        state.error = null
-      })
-      .addCase(logoutAsync.rejected, (state, action) => {
-        state.isLoading = false
-        state.user = null
-        state.isAuthenticated = false
-        state.error = action.payload as string
-      })
-
-    // Get current user
-    builder
-      .addCase(getCurrentUserAsync.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(getCurrentUserAsync.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.user = action.payload
-        state.isAuthenticated = true
-        state.error = null
-      })
-      .addCase(getCurrentUserAsync.rejected, (state, action) => {
-        state.isLoading = false
-        state.error = action.payload as string
-        state.isAuthenticated = false
-        state.user = null
-      })
+      .addCase(refreshTokenThunk.fulfilled, (state, action) => {
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+      });
   },
-})
+});
 
-export const { clearError, setUser, clearAuth } = authSlice.actions
-export { verifyTwoFactorAsync }
-export default authSlice.reducer
+export const { setCredentials, clearAuth, setError, clearError } = authSlice.actions;
+
+export const selectAuth = (state: RootState) => state.auth;
+export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
+export const selectUser = (state: RootState) => state.auth.user;
+export const selectAuthToken = (state: RootState) => state.auth.token;
+
+export default authSlice.reducer;

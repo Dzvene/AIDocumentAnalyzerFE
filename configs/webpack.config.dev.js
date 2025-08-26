@@ -148,7 +148,7 @@ module.exports = {
   ],
   devServer: {
     static: path.join(__dirname, '..', 'dist'),
-    port: 3080,
+    port: 3096,
     hot: true,
     historyApiFallback: true,
     headers: {
@@ -156,10 +156,16 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:5050',
+        target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
         logLevel: 'debug',
+        onProxyRes: function (proxyRes, req, res) {
+          // Add CORS headers if backend doesn't provide them
+          proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+          proxyRes.headers['Access-Control-Allow-Methods'] = '*';
+          proxyRes.headers['Access-Control-Allow-Headers'] = '*';
+        },
       },
     },
   },

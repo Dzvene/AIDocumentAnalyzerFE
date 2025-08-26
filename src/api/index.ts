@@ -1,22 +1,49 @@
-export * from './config'
-export * from './authApi'
-export * from './productsApi'
-export * from './vendorsApi'
-export { vendorsApi as shopsApi } from './vendorsApi'
-export * from './cartApi'
-export * from './ordersApi'
-export * from './usersApi'
-export * from './adminApi'
-export * from './localizationApi'
-export * from './reviewsApi'
-export * from './addressesApi'
-export * from './searchApi'
-export * from './categoriesApi'
-export * from './blogApi'
-export * from './couponsApi'
-export * from './paymentsApi'
-export * from './geolocationApi'
-export * from './deliveryApi'
-export * from './multiCartApi'
-export * from './shoppingListApi'
-export * from './platformApi'
+// Export all API services
+export { authAPI } from './auth.api';
+export { documentsAPI } from './documents.api';
+export { analysisAPI } from './analysis.api';
+
+// Export types
+export type {
+  LoginRequest,
+  RegisterRequest,
+  User,
+  AuthResponse,
+} from './auth.api';
+
+export type {
+  Document,
+  DocumentUploadRequest,
+  DocumentListRequest,
+  DocumentListResponse,
+  DocumentSearchRequest,
+  DocumentProcessingStatus,
+  BulkUploadResponse,
+} from './documents.api';
+
+export {
+  DocumentType,
+  DocumentStatus,
+} from './documents.api';
+
+export type {
+  Analysis,
+  AnalysisRequest,
+  BulkAnalysisRequest,
+  AnalysisListRequest,
+  AnalysisListResponse,
+  AnalysisStatistics,
+  AnalysisCostEstimate,
+  RiskItem,
+  PositiveClause,
+} from './analysis.api';
+
+export {
+  AIProvider,
+  AnalysisStatus,
+  RiskLevel,
+} from './analysis.api';
+
+// Export utilities
+export { default as axiosInstance, handleApiError, createFormData } from './axios';
+export type { ApiError } from './axios';

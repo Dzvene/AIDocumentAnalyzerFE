@@ -1,1 +1,0 @@
-export { UserReviews } from './UserReviews'

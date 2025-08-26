@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from '@store/hooks'
-import { getCurrentUserAsync, refreshTokenAsync } from '@store/slices/authSlice'
+import { checkAuth, refreshTokenThunk } from '@store/slices/authSlice'
 import { getToken, getRefreshToken, isTokenExpired } from '@utils/auth'
 
 export const useAuthInit = () => {
@@ -16,23 +16,37 @@ export const useAuthInit = () => {
         if (isTokenExpired(token)) {
           // Try to refresh the token
           try {
-            await dispatch(refreshTokenAsync()).unwrap()
+            await dispatch(refreshTokenThunk()).unwrap()
           } catch (error) {
             console.error('Failed to refresh token:', error)
-            // Token refresh failed, user needs to login again
+            // Clear invalid tokens
+            localStorage.removeItem('token')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('user_data')
           }
         } else {
           // Token is valid, get current user info
           try {
-            await dispatch(getCurrentUserAsync()).unwrap()
+            await dispatch(checkAuth()).unwrap()
           } catch (error) {
             console.error('Failed to get current user:', error)
+            // If we can't get user data but token exists, clear auth
+            localStorage.removeItem('token')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('user_data')
           }
         }
       }
     }
 
-    initAuth()
+    // Only run init if we don't already have auth state
+    const existingUserData = localStorage.getItem('user_data')
+    const existingToken = localStorage.getItem('token')
+    
+    if (existingToken && existingUserData) {
+      // We have both token and user data, try to validate
+      initAuth()
+    }
   }, [dispatch])
 
   // Setup token refresh interval
@@ -43,7 +57,7 @@ export const useAuthInit = () => {
 
       if (token && refreshToken && isTokenExpired(token)) {
         try {
-          await dispatch(refreshTokenAsync()).unwrap()
+          await dispatch(refreshTokenThunk()).unwrap()
         } catch (error) {
           console.error('Token refresh failed:', error)
         }

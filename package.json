@@ -1,7 +1,7 @@
 {
-  "name": "on-limit-shop-ui",
+  "name": "ai-document-analyzer-frontend",
   "version": "1.0.0",
-  "description": "Base Admin UI project",
+  "description": "AI Document Analyzer Frontend",
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --config configs/webpack.config.dev.js",

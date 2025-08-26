@@ -1,6 +1,6 @@
-# OnLimitShop - Маркетплейс Frontend
+# AI Document Analyzer - Frontend
 
-Современный frontend для маркетплейса OnLimitShop, построенный на React + TypeScript с полной интеграцией API.
+Современный frontend для системы анализа документов с помощью AI, построенный на React + TypeScript с полной интеграцией API.
 
 ## Особенности
 

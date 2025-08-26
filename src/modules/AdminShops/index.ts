@@ -1,1 +1,0 @@
-export { AdminShops } from './AdminShops'
