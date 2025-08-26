@@ -1,0 +1,227 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.pricing-table {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  margin: 40px 0;
+  
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 50px;
+    
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 15px;
+      
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+    }
+    
+    p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+  
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+  
+  .pricing-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    &.highlighted {
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      
+      @media (max-width: 768px) {
+        transform: scale(1);
+      }
+      
+      .popular-badge {
+        position: absolute;
+        top: -15px;
+        right: 20px;
+        background: #ff6b6b;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+    }
+    
+    .tier-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+    
+    .tier-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .pages-range {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    
+    .price {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 5px;
+      
+      .currency {
+        font-size: 1.5rem;
+        color: #667eea;
+        font-weight: 600;
+      }
+      
+      .amount {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .per {
+        font-size: 1rem;
+        color: #666;
+      }
+    }
+    
+    .discount-badge {
+      display: inline-block;
+      background: #4ecdc4;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .tier-description {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .example-calculation {
+      padding-top: 20px;
+      border-top: 1px dashed #e0e0e0;
+      
+      .example-title {
+        font-size: 0.85rem;
+        color: #999;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      
+      .example-text {
+        font-size: 1rem;
+        color: #333;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .pricing-features {
+    margin-top: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    
+    h3 {
+      font-size: 1.8rem;
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      
+      .feature-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+    }
+  }
+  
+  .pricing-note {
+    margin-top: 40px;
+    text-align: center;
+    
+    p {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      display: inline-block;
+      font-size: 1.1rem;
+      backdrop-filter: blur(10px);
+      
+      strong {
+        color: #ffd700;
+      }
+    }
+  }
+}

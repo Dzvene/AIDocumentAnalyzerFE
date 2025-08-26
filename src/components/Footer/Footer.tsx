@@ -10,9 +10,17 @@ export const Footer: React.FC = () => {
   
   return (
     <footer className="footer">
+      <div className="footer__pricing-info">
+        <div className="pricing-badges">
+          <span className="pricing-badge">📄 1-10 стр: €0.99</span>
+          <span className="pricing-badge">📚 11-50 стр: €0.79</span>
+          <span className="pricing-badge">📖 51-100 стр: €0.59</span>
+          <span className="pricing-badge">🏢 100+ стр: €0.39</span>
+        </div>
+      </div>
       <div className="footer__content">
         <p className="footer__text">
-          &copy; {currentYear} OnLimitShop. {t('footer.copyright') || 'All rights reserved.'}
+          &copy; {currentYear} AI Document Analyzer. {t('footer.copyright') || 'All rights reserved.'}
         </p>
         <div className="footer__links">
           <Link to={ROUTES.PRIVACY_POLICY} className="footer__link">

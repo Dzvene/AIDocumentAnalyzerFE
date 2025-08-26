@@ -14,11 +14,11 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { path: '/', label: 'Home', icon: '🏠' },
-  { path: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { path: '/users', label: 'Users', icon: '👥' },
-  { path: '/translations', label: 'Translations', icon: '🌐' },
-  { path: '/settings', label: 'Settings', icon: '⚙️' },
+  { path: '/', label: 'Главная', icon: '🏠' },
+  { path: '/analyze', label: 'Анализ документов', icon: '🔍' },
+  { path: '/history', label: 'История', icon: '📜' },
+  { path: '/profile', label: 'Профиль', icon: '👤' },
+  { path: '/settings', label: 'Настройки', icon: '⚙️' },
 ]
 
 export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {

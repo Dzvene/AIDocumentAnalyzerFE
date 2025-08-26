@@ -15,7 +15,7 @@ import { LoadingSpinner, Layout, ProtectedRoute } from '@components'
 import NotificationProvider from '@components/NotificationProvider'
 
 import { Home } from '@modules/Home'
-import { Dashboard } from '@modules/Dashboard'
+import DocumentAnalyzer from '@modules/DocumentAnalyzer'
 import Login from '@modules/Login'
 import { Register, ForgotPassword } from '@modules/Auth'
 
@@ -39,16 +39,14 @@ const AppContent: React.FC = () => {
           <Route path={ROUTES.REGISTER} element={<Register />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
           
-          <Route path="/dashboard" element={
+          <Route path="/analyze" element={
             <ProtectedRoute>
-              <Dashboard />
+              <DocumentAnalyzer />
             </ProtectedRoute>
           } />
           
-          <Route path="/upload" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
+          <Route path="/dashboard" element={
+            <Navigate to="/analyze" replace />
           } />
         </Route>
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import PricingTable from '../../components/PricingTable'
 import './Home.scss'
 
 export const Home: React.FC = () => {
@@ -108,6 +109,12 @@ export const Home: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="home__pricing">
+        <div className="container">
+          <PricingTable />
         </div>
       </section>
 
