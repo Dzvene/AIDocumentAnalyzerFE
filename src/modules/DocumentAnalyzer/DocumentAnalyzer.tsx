@@ -457,21 +457,88 @@ const DocumentAnalyzer: React.FC = () => {
 
           <div className="analysis-results">
             <div className="summary-card">
-              <h3>Краткое резюме</h3>
+              <h3>📋 Краткое резюме</h3>
               <p>{analysisResult.summary}</p>
             </div>
 
             <div className="risks-section">
-              <h3>Обнаруженные риски и важные условия</h3>
-              {analysisResult.risks.map((risk: any, index: number) => (
-                <div key={index} className={`risk-item risk-${risk.level}`}>
-                  <span className="risk-indicator">
-                    {risk.level === 'high' ? '⚠️' : risk.level === 'medium' ? '⚡' : 'ℹ️'}
-                  </span>
-                  <p>{risk.text}</p>
-                </div>
-              ))}
+              <h3>⚠️ Обнаруженные риски и важные условия</h3>
+              {analysisResult.risks && analysisResult.risks.length > 0 ? (
+                analysisResult.risks.map((risk: any, index: number) => (
+                  <div key={index} className={`risk-item risk-${risk.level}`}>
+                    <div className="risk-header">
+                      <span className="risk-indicator">
+                        {risk.level === 'high' ? '🔴' : risk.level === 'medium' ? '🟡' : '🔵'}
+                      </span>
+                      <span className="risk-level-label">
+                        {risk.level === 'high' ? 'Высокий риск' : 
+                         risk.level === 'medium' ? 'Средний риск' : 'Информация'}
+                      </span>
+                    </div>
+                    <p className="risk-text">{risk.text}</p>
+                    {risk.quote && (
+                      <blockquote className="risk-quote">
+                        <i>"{risk.quote}"</i>
+                      </blockquote>
+                    )}
+                    {risk.section && (
+                      <span className="risk-section">📍 {risk.section}</span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="no-risks">Критических рисков не обнаружено</p>
+              )}
             </div>
+
+            {analysisResult.positive_points && analysisResult.positive_points.length > 0 && (
+              <div className="positive-section">
+                <h3>✅ Положительные аспекты</h3>
+                <ul>
+                  {analysisResult.positive_points.map((point: string, index: number) => (
+                    <li key={index}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {analysisResult.recommendations && analysisResult.recommendations.length > 0 && (
+              <div className="recommendations-section">
+                <h3>💡 Рекомендации</h3>
+                <ul className="recommendations-list">
+                  {analysisResult.recommendations.map((rec: string, index: number) => (
+                    <li key={index}>
+                      <span className="rec-number">{index + 1}.</span>
+                      <span className="rec-text">{rec}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {analysisResult.key_terms && Object.keys(analysisResult.key_terms).length > 0 && (
+              <div className="key-terms-section">
+                <h3>📌 Ключевые условия</h3>
+                <div className="key-terms-grid">
+                  {Object.entries(analysisResult.key_terms).map(([key, value], index) => (
+                    <div key={index} className="key-term-item">
+                      <span className="term-key">{key}:</span>
+                      <span className="term-value">{value as string}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {analysisResult.pricing && (
+              <div className="pricing-info">
+                <h4>💰 Стоимость анализа</h4>
+                <div className="pricing-details">
+                  <span>Страниц: {analysisResult.page_count || analysisResult.pageCount}</span>
+                  <span className="price-tag">€{analysisResult.pricing.total_price}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

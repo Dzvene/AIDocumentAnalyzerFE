@@ -447,44 +447,259 @@
       }
 
       .risks-section {
+        margin-bottom: 2rem;
+        
         h3 {
           font-size: 1.2rem;
           font-weight: 600;
           margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
 
         .risk-item {
-          display: flex;
-          align-items: start;
-          gap: 1rem;
-          padding: 1rem;
+          padding: 1.2rem;
           margin-bottom: 1rem;
           border-radius: 8px;
           border-left: 4px solid;
+          transition: transform 0.2s;
+
+          &:hover {
+            transform: translateX(5px);
+          }
 
           &.risk-high {
-            background: var(--color-danger-light);
-            border-left-color: var(--color-danger);
+            background: #ffebee;
+            border-left-color: #ef5350;
           }
 
           &.risk-medium {
-            background: var(--color-warning-light);
-            border-left-color: var(--color-warning);
+            background: #fff3e0;
+            border-left-color: #ff9800;
           }
 
-          &.risk-low {
-            background: var(--color-info-light);
-            border-left-color: var(--color-info);
+          &.risk-low, &.risk-info {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
           }
 
-          .risk-indicator {
-            font-size: 1.5rem;
-            flex-shrink: 0;
+          .risk-header {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 0.8rem;
+
+            .risk-indicator {
+              font-size: 1.2rem;
+            }
+
+            .risk-level-label {
+              font-weight: 600;
+              font-size: 0.85rem;
+              text-transform: uppercase;
+              opacity: 0.8;
+            }
           }
 
-          p {
-            flex: 1;
-            line-height: 1.5;
+          .risk-text {
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+          }
+
+          .risk-quote {
+            background: rgba(255,255,255,0.7);
+            border-left: 3px solid #ccc;
+            padding: 0.7rem 1rem;
+            margin: 0.8rem 0;
+            font-style: italic;
+            opacity: 0.9;
+            border-radius: 4px;
+            font-size: 0.9rem;
+          }
+
+          .risk-section {
+            display: inline-block;
+            background: rgba(0,0,0,0.05);
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+          }
+        }
+
+        .no-risks {
+          text-align: center;
+          color: #4caf50;
+          font-style: italic;
+          padding: 2rem;
+          background: #f1f8e9;
+          border-radius: 8px;
+        }
+      }
+
+      .positive-section {
+        background: #f1f8e9;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #4caf50;
+        margin-bottom: 2rem;
+
+        h3 {
+          color: #2e7d32;
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+
+          li {
+            position: relative;
+            padding-left: 1.8rem;
+            margin-bottom: 0.7rem;
+            line-height: 1.6;
+
+            &:before {
+              content: "✓";
+              position: absolute;
+              left: 0;
+              color: #4caf50;
+              font-weight: bold;
+              font-size: 1.1rem;
+            }
+          }
+        }
+      }
+
+      .recommendations-section {
+        background: #fff8e1;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #ffc107;
+        margin-bottom: 2rem;
+
+        h3 {
+          color: #f57c00;
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .recommendations-list {
+          list-style: none;
+          padding: 0;
+
+          li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 6px;
+
+            .rec-number {
+              background: #ff9800;
+              color: white;
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              font-size: 0.85rem;
+              flex-shrink: 0;
+            }
+
+            .rec-text {
+              line-height: 1.6;
+              flex: 1;
+            }
+          }
+        }
+      }
+
+      .key-terms-section {
+        background: #f5f5f5;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #9e9e9e;
+        margin-bottom: 2rem;
+
+        h3 {
+          color: #616161;
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .key-terms-grid {
+          display: grid;
+          gap: 0.8rem;
+
+          .key-term-item {
+            background: white;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid #e0e0e0;
+
+            .term-key {
+              font-weight: 600;
+              color: #616161;
+              min-width: 150px;
+            }
+
+            .term-value {
+              flex: 1;
+            }
+          }
+        }
+      }
+
+      .pricing-info {
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        margin-top: 2rem;
+
+        h4 {
+          font-size: 1rem;
+          margin-bottom: 0.8rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .pricing-details {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          span {
+            font-size: 0.95rem;
+          }
+
+          .price-tag {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4caf50;
           }
         }
       }
