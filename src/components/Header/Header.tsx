@@ -30,9 +30,6 @@ export const Header: React.FC = () => {
   const navLinks = [
     { path: '/', label: 'Главная', public: true },
     { path: '/dashboard', label: 'Панель управления', public: false },
-    { path: '/upload', label: 'Загрузить', public: false },
-    { path: '/about', label: 'О нас', public: true },
-    { path: '/pricing', label: 'Тарифы', public: true },
   ]
 
   const isActive = (path: string) => {

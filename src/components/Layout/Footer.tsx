@@ -201,16 +201,7 @@ const Footer: React.FC = () => {
 
         {/* Bottom Footer */}
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
-              <span className="text-white font-bold text-sm">O</span>
-            </div>
-            <span className="font-bold text-lg text-gray-900 dark:text-white">
-              OnLimitShop
-            </span>
-          </div>
-          
-          <p className="text-gray-600 dark:text-gray-400 text-sm text-center md:text-right">
+          <p className="text-gray-600 dark:text-gray-400 text-sm text-center w-full">
             {t('footer.copyright', { year: currentYear })}
           </p>
         </div>
