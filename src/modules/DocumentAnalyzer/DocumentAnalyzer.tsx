@@ -543,6 +543,11 @@ const DocumentAnalyzer: React.FC = () => {
                       </span>
                     </div>
                     <p className="risk-text">{risk.text}</p>
+                    {risk.details && (
+                      <div className="risk-details">
+                        <strong>Детали:</strong> {risk.details}
+                      </div>
+                    )}
                     {risk.quote && (
                       <blockquote className="risk-quote">
                         <i>"{risk.quote}"</i>

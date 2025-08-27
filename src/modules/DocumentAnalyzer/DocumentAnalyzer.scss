@@ -691,6 +691,20 @@
             margin-bottom: 0.5rem;
           }
 
+          .risk-details {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 0.7rem;
+            border-radius: 6px;
+            margin: 0.7rem 0;
+            font-size: 0.9rem;
+            
+            strong {
+              color: #ff6b6b;
+              display: block;
+              margin-bottom: 0.3rem;
+            }
+          }
+
           .risk-quote {
             background: rgba(255,255,255,0.7);
             border-left: 3px solid #ccc;
