@@ -49,6 +49,103 @@
     "orders": "Orders",
     "wishlist": "Wishlist"
   },
+  "home": {
+    "hero": {
+      "title": "AI Document Analyzer",
+      "subtitle": "Intelligent document analysis using artificial intelligence",
+      "startAnalysis": "Start Analysis"
+    },
+    "features": {
+      "title": "System Features",
+      "documentAnalysis": {
+        "title": "Document Analysis",
+        "description": "Automatic extraction of key information from PDF, Word, Excel and other formats"
+      },
+      "aiProcessing": {
+        "title": "AI Processing",
+        "description": "Using advanced machine learning algorithms for content analysis"
+      },
+      "reports": {
+        "title": "Detailed Reports",
+        "description": "Structured results with identified risks and recommendations"
+      },
+      "security": {
+        "title": "Data Protection",
+        "description": "JWT authentication, password hashing and GDPR compliance"
+      },
+      "fastProcessing": {
+        "title": "Fast Processing",
+        "description": "Instant analysis of documents of any size"
+      },
+      "multiFormat": {
+        "title": "Multiple Formats",
+        "description": "Support for PDF, Word, Excel, text files and images"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": {
+        "title": "Upload Document",
+        "description": "Simply drag and drop a file or select it from your computer"
+      },
+      "step2": {
+        "title": "Automatic Analysis",
+        "description": "AI instantly processes and analyzes the content"
+      },
+      "step3": {
+        "title": "Get Results",
+        "description": "Review detailed report with risks and recommendations"
+      }
+    },
+    "pricing": {
+      "title": "Transparent Pricing",
+      "subtitle": "The more pages in the document, the better the price per page",
+      "popularBadge": "Popular",
+      "currency": "€",
+      "perPage": "/page",
+      "discountBadge": "Discount",
+      "example": "Example:",
+      "pages": "pages",
+      "tiers": {
+        "basic": {
+          "name": "Basic",
+          "description": "Perfect for small documents",
+          "example": "10 pages = €9.90"
+        },
+        "standard": {
+          "name": "Standard",
+          "description": "For medium documents and contracts",
+          "example": "30 pages = €23.70"
+        },
+        "professional": {
+          "name": "Professional",
+          "description": "For large contracts",
+          "example": "75 pages = €44.25"
+        },
+        "corporate": {
+          "name": "Corporate",
+          "description": "Maximum savings for large documents",
+          "example": "150 pages = €58.50"
+        }
+      },
+      "features": {
+        "title": "What's included in the analysis:",
+        "riskDetection": "Detection of all risks and pitfalls",
+        "termsAnalysis": "Analysis of important terms and obligations",
+        "recommendations": "Personal recommendations",
+        "pdfExport": "Export report to PDF",
+        "aiAnalysis": "AI analysis from OpenAI/Claude",
+        "dataPrivacy": "Data confidentiality"
+      },
+      "tip": "Tip:",
+      "tipText": "Upload multiple documents at once for maximum savings!"
+    },
+    "cta": {
+      "title": "Ready to start?",
+      "subtitle": "Try AI Document Analyzer for free right now",
+      "button": "Start Free"
+    }
+  },
   "auth": {
     "signIn": "Sign In",
     "signUp": "Sign Up",
@@ -300,7 +397,10 @@
     "aboutUs": "About Us",
     "contactUs": "Contact Us",
     "privacyPolicy": "Privacy Policy",
+    "privacy": "Privacy Policy",
     "termsOfService": "Terms of Service",
+    "terms": "Terms of Service",
+    "faq": "FAQ",
     "customerService": "Customer Service",
     "shippingInfo": "Shipping Information",
     "returnPolicy": "Return Policy",

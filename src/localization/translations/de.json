@@ -49,6 +49,13 @@
     "orders": "Bestellungen",
     "wishlist": "Wunschliste"
   },
+  "home": {
+    "cta": {
+      "title": "Bereit zu starten?",
+      "subtitle": "Probieren Sie AI Document Analyzer jetzt kostenlos aus",
+      "button": "Kostenlos starten"
+    }
+  },
   "auth": {
     "signIn": "Anmelden",
     "signUp": "Registrieren",

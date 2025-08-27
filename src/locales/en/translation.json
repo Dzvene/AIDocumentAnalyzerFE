@@ -431,6 +431,34 @@
     "followUs": "Follow us",
     "newsletter": "Newsletter",
     "subscribe": "Subscribe",
-    "copyright": "All rights reserved."
+    "copyright": "All rights reserved.",
+    "faq": "FAQ"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions",
+    "searchPlaceholder": "Search for answers...",
+    "categories": "Categories",
+    "allCategories": "All Categories",
+    "popularQuestions": "Popular Questions",
+    "featuredQuestions": "Featured Questions",
+    "relatedQuestions": "Related Questions",
+    "wasHelpful": "Was this helpful?",
+    "yes": "Yes",
+    "no": "No",
+    "thanksFeedback": "Thanks for your feedback!",
+    "noResults": "No results found",
+    "tryDifferentSearch": "Try searching with different keywords",
+    "viewMore": "View more",
+    "viewLess": "View less",
+    "backToFaq": "Back to FAQ",
+    "contactSupport": "Can't find what you're looking for? Contact support",
+    "loading": "Loading questions...",
+    "error": "Failed to load FAQ"
+  },
+  "cta": {
+    "title": "Ready to get started?",
+    "subtitle": "Try AI Document Analyzer for free right now",
+    "button": "Start Free"
   }
 }

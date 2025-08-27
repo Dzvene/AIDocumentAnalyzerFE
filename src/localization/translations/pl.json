@@ -49,6 +49,13 @@
     "orders": "Zamówienia",
     "wishlist": "Lista życzeń"
   },
+  "home": {
+    "cta": {
+      "title": "Gotowy, aby zacząć?",
+      "subtitle": "Wypróbuj AI Document Analyzer za darmo już teraz",
+      "button": "Zacznij za darmo"
+    }
+  },
   "auth": {
     "signIn": "Zaloguj się",
     "signUp": "Zarejestruj się",
