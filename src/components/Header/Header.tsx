@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { logout } from '@store/slices/authSlice'
-import { toggleTheme } from '@store/slices/themeSlice'
+import { useTranslation } from 'react-i18next'
+import { LanguageSelector } from '@components/LanguageSelector'
 import './Header.scss'
 
 export const Header: React.FC = () => {
@@ -10,9 +11,9 @@ export const Header: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   
   const { isAuthenticated, user } = useAppSelector((state) => state.auth)
-  const { isDarkMode } = useAppSelector((state) => state.theme)
 
   const handleLogout = async () => {
     await dispatch(logout())
@@ -23,13 +24,9 @@ export const Header: React.FC = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
-  const handleThemeToggle = () => {
-    dispatch(toggleTheme())
-  }
-
   const navLinks = [
-    { path: '/', label: 'Главная', public: true },
-    { path: '/dashboard', label: 'Панель управления', public: false },
+    { path: '/', label: t('navigation.home'), public: true },
+    { path: '/dashboard', label: t('navigation.dashboard'), public: false },
   ]
 
   const isActive = (path: string) => {
@@ -65,13 +62,7 @@ export const Header: React.FC = () => {
         </nav>
 
         <div className="header__actions">
-          <button 
-            className="header__theme-toggle"
-            onClick={handleThemeToggle}
-            aria-label="Toggle theme"
-          >
-            {isDarkMode ? '☀️' : '🌙'}
-          </button>
+          <LanguageSelector />
 
           {isAuthenticated ? (
             <div className="header__user">
@@ -85,7 +76,7 @@ export const Header: React.FC = () => {
                 className="header__logout-btn"
                 onClick={handleLogout}
               >
-                Выйти
+                {t('common.logout')}
               </button>
             </div>
           ) : (
@@ -94,13 +85,13 @@ export const Header: React.FC = () => {
                 to="/login" 
                 className="header__login-btn"
               >
-                Войти
+                {t('common.login')}
               </Link>
               <Link 
                 to="/register" 
                 className="header__register-btn"
               >
-                Регистрация
+                {t('common.register')}
               </Link>
             </div>
           )}

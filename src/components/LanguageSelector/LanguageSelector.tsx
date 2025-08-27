@@ -4,9 +4,8 @@ import { useNotification } from '@hooks/useNotification'
 import './LanguageSelector.scss'
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸', nativeName: 'English' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺', nativeName: 'Русский' },
-  { code: 'uk', name: 'Українська', flag: '🇺🇦', nativeName: 'Українська' }
+  { code: 'en', name: 'English', flag: '🇬🇧', nativeName: 'English' },
+  { code: 'ru', name: 'Русский', flag: '🇷🇺', nativeName: 'Русский' }
 ]
 
 export const LanguageSelector: React.FC = () => {

@@ -11,16 +11,13 @@ export const Home: React.FC = () => {
     <div className="home">
       <section className="home__hero">
         <div className="container">
-          <h1 className="home__title">AI Document Analyzer</h1>
+          <h1 className="home__title">{t('home.hero.title')}</h1>
           <p className="home__subtitle">
-            Интеллектуальный анализ документов с использованием искусственного интеллекта
+            {t('home.hero.subtitle')}
           </p>
           <div className="home__actions">
-            <Link to="/upload" className="btn btn--primary btn--large">
-              Загрузить документ
-            </Link>
-            <Link to="/dashboard" className="btn btn--secondary btn--large">
-              Мои документы
+            <Link to="/analyze" className="btn btn--primary btn--large">
+              {t('home.hero.startAnalysis')}
             </Link>
           </div>
         </div>
@@ -28,53 +25,53 @@ export const Home: React.FC = () => {
 
       <section className="home__features">
         <div className="container">
-          <h2 className="home__section-title">Возможности системы</h2>
+          <h2 className="home__section-title">{t('home.features.title')}</h2>
           <div className="home__features-grid">
             <div className="feature-card">
               <div className="feature-card__icon">📄</div>
-              <h3 className="feature-card__title">Анализ документов</h3>
+              <h3 className="feature-card__title">{t('home.features.documentAnalysis.title')}</h3>
               <p className="feature-card__description">
-                Автоматическое извлечение ключевой информации из PDF, Word, Excel и других форматов
+                {t('home.features.documentAnalysis.description')}
               </p>
             </div>
 
             <div className="feature-card">
               <div className="feature-card__icon">🤖</div>
-              <h3 className="feature-card__title">ИИ обработка</h3>
+              <h3 className="feature-card__title">{t('home.features.aiProcessing.title')}</h3>
               <p className="feature-card__description">
-                Использование передовых алгоритмов машинного обучения для анализа содержимого
+                {t('home.features.aiProcessing.description')}
               </p>
             </div>
 
             <div className="feature-card">
               <div className="feature-card__icon">📊</div>
-              <h3 className="feature-card__title">Аналитика</h3>
+              <h3 className="feature-card__title">{t('home.features.reports.title')}</h3>
               <p className="feature-card__description">
-                Детальная статистика и визуализация результатов анализа
+                {t('home.features.reports.description')}
               </p>
             </div>
 
             <div className="feature-card">
               <div className="feature-card__icon">🔒</div>
-              <h3 className="feature-card__title">Безопасность</h3>
+              <h3 className="feature-card__title">{t('home.features.security.title')}</h3>
               <p className="feature-card__description">
-                Полная конфиденциальность и защита ваших документов
+                {t('home.features.security.description')}
               </p>
             </div>
 
             <div className="feature-card">
               <div className="feature-card__icon">⚡</div>
-              <h3 className="feature-card__title">Быстрая обработка</h3>
+              <h3 className="feature-card__title">{t('home.features.fastProcessing.title')}</h3>
               <p className="feature-card__description">
-                Мгновенный анализ документов любого размера
+                {t('home.features.fastProcessing.description')}
               </p>
             </div>
 
             <div className="feature-card">
-              <div className="feature-card__icon">🌐</div>
-              <h3 className="feature-card__title">API интеграция</h3>
+              <div className="feature-card__icon">📁</div>
+              <h3 className="feature-card__title">{t('home.features.multiFormat.title')}</h3>
               <p className="feature-card__description">
-                Простая интеграция с вашими существующими системами
+                {t('home.features.multiFormat.description')}
               </p>
             </div>
           </div>
@@ -83,29 +80,29 @@ export const Home: React.FC = () => {
 
       <section className="home__how-it-works">
         <div className="container">
-          <h2 className="home__section-title">Как это работает</h2>
+          <h2 className="home__section-title">{t('home.howItWorks.title')}</h2>
           <div className="home__steps">
             <div className="step">
               <div className="step__number">1</div>
-              <h3 className="step__title">Загрузите документ</h3>
+              <h3 className="step__title">{t('home.howItWorks.step1.title')}</h3>
               <p className="step__description">
-                Просто перетащите файл или выберите его с компьютера
+                {t('home.howItWorks.step1.description')}
               </p>
             </div>
 
             <div className="step">
               <div className="step__number">2</div>
-              <h3 className="step__title">Выберите тип анализа</h3>
+              <h3 className="step__title">{t('home.howItWorks.step2.title')}</h3>
               <p className="step__description">
-                Укажите, какую информацию нужно извлечь
+                {t('home.howItWorks.step2.description')}
               </p>
             </div>
 
             <div className="step">
               <div className="step__number">3</div>
-              <h3 className="step__title">Получите результаты</h3>
+              <h3 className="step__title">{t('home.howItWorks.step3.title')}</h3>
               <p className="step__description">
-                Скачайте отчет или используйте API для интеграции
+                {t('home.howItWorks.step3.description')}
               </p>
             </div>
           </div>
@@ -120,12 +117,12 @@ export const Home: React.FC = () => {
 
       <section className="home__cta">
         <div className="container">
-          <h2 className="home__cta-title">Готовы начать?</h2>
+          <h2 className="home__cta-title">{t('cta.title')}</h2>
           <p className="home__cta-subtitle">
-            Попробуйте AI Document Analyzer бесплатно прямо сейчас
+            {t('cta.subtitle')}
           </p>
           <Link to="/register" className="btn btn--primary btn--large">
-            Начать бесплатно
+            {t('cta.button')}
           </Link>
         </div>
       </section>

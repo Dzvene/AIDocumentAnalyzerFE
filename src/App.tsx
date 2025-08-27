@@ -18,6 +18,7 @@ import { Home } from '@modules/Home'
 import DocumentAnalyzer from '@modules/DocumentAnalyzer'
 import Login from '@modules/Login'
 import { Register, ForgotPassword } from '@modules/Auth'
+import { FAQ } from '@modules/FAQ'
 
 const AppContent: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -38,6 +39,9 @@ const AppContent: React.FC = () => {
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.REGISTER} element={<Register />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          
+          <Route path={ROUTES.FAQ} element={<FAQ />} />
+          <Route path={ROUTES.FAQ_QUESTION} element={<FAQ />} />
           
           <Route path="/analyze" element={
             <ProtectedRoute>

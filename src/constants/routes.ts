@@ -12,6 +12,8 @@ export const ROUTES = {
   VENDORS: '/vendors',
   VIEW_SHOP: '/shop/:slug',
   SEARCH: '/search',
+  FAQ: '/faq',
+  FAQ_QUESTION: '/faq/:slug',
   
   // Auth routes
   LOGIN: '/login',
@@ -66,6 +68,8 @@ export const PUBLIC_ROUTES = [
   ROUTES.VENDORS,
   ROUTES.VIEW_SHOP,
   ROUTES.SEARCH,
+  ROUTES.FAQ,
+  ROUTES.FAQ_QUESTION,
   ROUTES.LOGIN,
   ROUTES.REGISTER,
   ROUTES.FORGOT_PASSWORD,

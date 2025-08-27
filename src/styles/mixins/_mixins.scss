@@ -38,3 +38,28 @@
     }
   }
 }
+
+// Shorthand mixins for common breakpoints
+@mixin mobile {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin tablet-and-up {
+  @media (min-width: 768px) {
+    @content;
+  }
+}

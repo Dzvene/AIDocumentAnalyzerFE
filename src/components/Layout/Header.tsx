@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { RootState } from '@store/index'
 import { logout } from '@store/slices/authSlice'
-import ThemeToggle from '@components/common/ThemeToggle'
 import LanguageToggle from '@components/common/LanguageToggle'
 
 const Header: React.FC = () => {
@@ -108,9 +107,6 @@ const Header: React.FC = () => {
 
           {/* Right Side Icons */}
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* Language Toggle */}
             <LanguageToggle />
 

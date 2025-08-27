@@ -16,11 +16,15 @@ export const Footer: React.FC = () => {
         </p>
         <div className="footer__links">
           <Link to={ROUTES.PRIVACY_POLICY} className="footer__link">
-            {t('footer.privacyPolicy') || 'Privacy Policy'}
+            {t('footer.privacy') || 'Privacy Policy'}
           </Link>
           <span className="footer__separator">•</span>
-          <Link to={ROUTES.TERMS_AND_CONDITIONS} className="footer__link">
-            {t('footer.termsOfService') || 'Terms of Service'}
+          <Link to={ROUTES.TERMS_CONDITIONS} className="footer__link">
+            {t('footer.terms') || 'Terms of Service'}
+          </Link>
+          <span className="footer__separator">•</span>
+          <Link to={ROUTES.FAQ} className="footer__link">
+            {t('footer.faq') || 'FAQ'}
           </Link>
         </div>
       </div>
