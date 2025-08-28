@@ -156,10 +156,12 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:5055',
         changeOrigin: true,
         secure: false,
         logLevel: 'debug',
+        timeout: 60000, // 60 seconds timeout
+        proxyTimeout: 60000, // 60 seconds proxy timeout
         onProxyRes: function (proxyRes, req, res) {
           // Add CORS headers if backend doesn't provide them
           proxyRes.headers['Access-Control-Allow-Origin'] = '*';
