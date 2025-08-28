@@ -26,6 +26,10 @@ export const Footer: React.FC = () => {
           <Link to={ROUTES.FAQ} className="footer__link">
             {t('footer.faq') || 'FAQ'}
           </Link>
+          <span className="footer__separator">•</span>
+          <Link to={ROUTES.GLOSSARY} className="footer__link">
+            {t('footer.glossary') || 'Glossary'}
+          </Link>
         </div>
       </div>
     </footer>

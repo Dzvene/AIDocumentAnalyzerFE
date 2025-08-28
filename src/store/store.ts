@@ -7,6 +7,7 @@ import themeSlice from './slices/themeSlice'
 import notificationSlice from './slices/notificationSlice'
 import documentsSlice from './slices/documentsSlice'
 import analysisSlice from './slices/analysisSlice'
+import billingSlice from './slices/billingSlice'
 
 const authPersistConfig = {
   key: 'auth',
@@ -24,6 +25,7 @@ const rootReducer = {
   notification: notificationSlice,
   documents: documentsSlice,
   analysis: analysisSlice,
+  billing: billingSlice,
 }
 
 export const store = configureStore({
