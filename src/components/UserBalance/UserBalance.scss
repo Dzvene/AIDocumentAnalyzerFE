@@ -1,0 +1,324 @@
+.user-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &--small {
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 8px;
+
+    .user-balance__icon {
+      font-size: 16px;
+    }
+
+    .user-balance__amount {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  &--medium {
+    padding: 8px 12px;
+    font-size: 14px;
+
+    .user-balance__icon {
+      font-size: 18px;
+    }
+
+    .user-balance__amount {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .user-balance__label {
+      font-size: 12px;
+      color: #6c757d;
+    }
+  }
+
+  &--large {
+    padding: 12px 16px;
+    font-size: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 160px;
+
+    .user-balance__main {
+      width: 100%;
+    }
+
+    .user-balance__icon {
+      font-size: 24px;
+    }
+
+    .user-balance__amount {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .user-balance__label {
+      font-size: 14px;
+      color: #6c757d;
+    }
+  }
+
+  &--loading {
+    background: #f8f9fa;
+    color: #6c757d;
+
+    .user-balance__spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e9ecef;
+      border-top: 2px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  &--error {
+    background: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+  }
+
+  // Balance status colors
+  &--high {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-color: #28a745;
+    color: #155724;
+
+    .user-balance__amount {
+      color: #155724;
+    }
+  }
+
+  &--medium {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-color: #ffc107;
+    color: #856404;
+
+    .user-balance__amount {
+      color: #856404;
+    }
+  }
+
+  &--low {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-color: #fd7e14;
+    color: #721c24;
+
+    .user-balance__amount {
+      color: #721c24;
+    }
+  }
+
+  &--critical {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-color: #dc3545;
+    color: #721c24;
+    animation: pulse 2s infinite;
+
+    .user-balance__amount {
+      color: #dc3545;
+      font-weight: 700;
+    }
+  }
+
+  .user-balance__main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .user-balance__icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .user-balance__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+  }
+
+  .user-balance__amount {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .user-balance__label {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 2px;
+  }
+
+  .user-balance__add-funds {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #218838;
+      transform: translateY(-1px);
+    }
+
+    .user-balance__add-icon {
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+
+  .user-balance__warning {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    background: #dc3545;
+    color: white;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    z-index: 10;
+
+    .user-balance__warning-icon {
+      font-size: 12px;
+    }
+  }
+
+  // Interactive states
+  &[role="button"] {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-color: #007bff;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+}
+
+// Animations
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .user-balance {
+    &--medium {
+      padding: 6px 10px;
+      font-size: 13px;
+
+      .user-balance__amount {
+        font-size: 14px;
+      }
+
+      .user-balance__label {
+        display: none; // Hide label on mobile
+      }
+    }
+
+    &--large {
+      padding: 10px 12px;
+      min-width: 140px;
+
+      .user-balance__amount {
+        font-size: 18px;
+      }
+    }
+
+    .user-balance__warning {
+      position: static;
+      margin-top: 4px;
+      font-size: 10px;
+    }
+  }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .user-balance {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-color: #4a5568;
+    color: #e2e8f0;
+
+    .user-balance__label {
+      color: #a0aec0;
+    }
+
+    &--high {
+      background: linear-gradient(135deg, #276749 0%, #2f855a 100%);
+      border-color: #38a169;
+      color: #c6f6d5;
+
+      .user-balance__amount {
+        color: #c6f6d5;
+      }
+    }
+
+    &--medium {
+      background: linear-gradient(135deg, #744210 0%, #975a16 100%);
+      border-color: #d69e2e;
+      color: #fef5e7;
+
+      .user-balance__amount {
+        color: #fef5e7;
+      }
+    }
+
+    &--low, &--critical {
+      background: linear-gradient(135deg, #742a2a 0%, #9c4221 100%);
+      border-color: #e53e3e;
+      color: #fed7d7;
+
+      .user-balance__amount {
+        color: #fed7d7;
+      }
+    }
+  }
+}

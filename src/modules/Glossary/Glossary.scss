@@ -1,0 +1,457 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.glossary-container {
+  padding: 2rem 0;
+  min-height: calc(100vh - 200px);
+
+  .term-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .MuiCardContent-root {
+      flex: 1;
+    }
+
+    .term-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .term-category {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background-color: var(--primary-light);
+      color: var(--primary-color);
+      border-radius: 16px;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .term-description {
+      color: var(--text-secondary);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .term-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        svg {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .search-section {
+    background: var(--background-paper);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    .search-field {
+      .MuiOutlinedInput-root {
+        background: var(--background-default);
+        
+        &:hover {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: var(--primary-color);
+          }
+        }
+
+        &.Mui-focused {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: var(--primary-color);
+          }
+        }
+      }
+    }
+
+    .filter-chip {
+      margin: 0.25rem;
+      
+      &.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+
+  .stats-cards {
+    margin-bottom: 2rem;
+
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem;
+      height: 100%;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin: 0.5rem 0;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        color: var(--primary-light);
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
+  .categories-section {
+    margin-bottom: 2rem;
+
+    .category-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      
+      &:hover {
+        border-color: var(--primary-color);
+        transform: translateX(4px);
+      }
+
+      &.selected {
+        border-color: var(--primary-color);
+        background-color: var(--primary-light);
+      }
+
+      .category-icon {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+      }
+
+      .category-count {
+        margin-left: auto;
+        background-color: var(--background-default);
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .alphabet-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--background-paper);
+    border-radius: 8px;
+
+    .letter-chip {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: var(--background-default);
+      border: 2px solid transparent;
+      font-weight: 600;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--primary-light);
+        border-color: var(--primary-color);
+      }
+
+      &.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+
+      &.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .term-detail-dialog {
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--divider);
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+
+      .term-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .close-button {
+        color: var(--text-secondary);
+        
+        &:hover {
+          color: var(--text-primary);
+        }
+      }
+    }
+
+    .term-content {
+      .content-section {
+        margin-bottom: 1.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .section-title {
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin-bottom: 0.75rem;
+          color: var(--text-primary);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          svg {
+            color: var(--primary-color);
+          }
+        }
+
+        .section-content {
+          color: var(--text-secondary);
+          line-height: 1.6;
+        }
+
+        .example-box {
+          background: var(--background-default);
+          padding: 1rem;
+          border-radius: 8px;
+          border-left: 4px solid var(--primary-color);
+          margin: 0.5rem 0;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9rem;
+        }
+
+        .synonym-chip,
+        .abbreviation-chip {
+          margin: 0.25rem;
+        }
+
+        .related-terms {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          .related-term {
+            padding: 0.5rem 1rem;
+            background: var(--background-default);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--divider);
+
+            &:hover {
+              background: var(--primary-light);
+              border-color: var(--primary-color);
+            }
+          }
+        }
+      }
+    }
+
+    .term-meta-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid var(--divider);
+      margin-top: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        svg {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+
+    .empty-icon {
+      font-size: 4rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+      color: var(--text-muted);
+    }
+  }
+
+  .loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    flex-direction: column;
+    gap: 1rem;
+
+    .loading-text {
+      color: var(--text-secondary);
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding: 1rem;
+
+    .MuiPagination-ul {
+      gap: 0.5rem;
+    }
+
+    .MuiPaginationItem-root {
+      &.Mui-selected {
+        background-color: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .glossary-container {
+    padding: 1rem 0;
+
+    .stats-cards {
+      .stat-card {
+        .stat-value {
+          font-size: 2rem;
+        }
+      }
+    }
+
+    .alphabet-filter {
+      .letter-chip {
+        min-width: 35px;
+        height: 35px;
+        font-size: 0.875rem;
+      }
+    }
+
+    .term-detail-dialog {
+      .dialog-header {
+        .term-title {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Dark Theme Support
+[data-theme="dark"] {
+  .glossary-container {
+    .term-card {
+      background: var(--dark-paper);
+      
+      &:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .search-section {
+      background: var(--dark-paper);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .stats-cards {
+      .stat-card {
+        background: var(--dark-paper);
+      }
+    }
+
+    .alphabet-filter {
+      background: var(--dark-paper);
+
+      .letter-chip {
+        background: var(--dark-background);
+        
+        &.active {
+          background: var(--primary-color);
+        }
+      }
+    }
+
+    .term-detail-dialog {
+      .term-content {
+        .example-box {
+          background: var(--dark-background);
+        }
+
+        .related-terms {
+          .related-term {
+            background: var(--dark-background);
+            border-color: var(--dark-divider);
+          }
+        }
+      }
+    }
+  }
+}
