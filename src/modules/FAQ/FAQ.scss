@@ -316,6 +316,115 @@
   }
 }
 
+// Featured Question Badge
+.faq__featured-badge {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 14px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.faq__item.is-featured {
+  .faq__question {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      border-radius: 2px;
+    }
+  }
+}
+
+// Related Questions Section
+.faq__related {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e8e8e8;
+  
+  &-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  &-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #0066cc;
+    background: #f8f8f8;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &::before {
+      content: '→';
+      margin-right: 8px;
+      font-weight: bold;
+    }
+    
+    &:hover {
+      background: #ffffff;
+      border-color: #0066cc;
+      transform: translateX(4px);
+    }
+  }
+}
+
+// Dark theme for related questions
+[data-theme="dark"] {
+  .faq__related {
+    border-top-color: #2a2a2a;
+    
+    &-title {
+      color: #cccccc;
+    }
+    
+    &-item {
+      color: #4da3ff;
+      background: #1a1a1a;
+      border-color: transparent;
+      
+      &:hover {
+        background: #2a2a2a;
+        border-color: #4da3ff;
+      }
+    }
+  }
+  
+  .faq__item.is-featured {
+    .faq__question {
+      &::before {
+        background: linear-gradient(135deg, #ffb700, #ffd700);
+      }
+    }
+  }
+}
+
 // Feedback Section
 .faq__feedback {
   display: flex;

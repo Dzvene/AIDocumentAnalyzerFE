@@ -13,6 +13,11 @@ interface FAQCategory {
   questions: FAQQuestion[]
 }
 
+interface RelatedQuestion {
+  id: string
+  question: string
+}
+
 interface FAQQuestion {
   id: string
   slug: string
@@ -23,6 +28,7 @@ interface FAQQuestion {
   is_featured?: boolean
   helpful_count?: number
   not_helpful_count?: number
+  related_questions?: RelatedQuestion[]
 }
 
 interface FeedbackState {
@@ -74,6 +80,26 @@ export const FAQ: React.FC = () => {
   const getCurrentCategoryQuestions = () => {
     const category = categories.find(cat => cat.id === selectedCategory)
     return category?.questions || []
+  }
+
+  // Navigate to related question
+  const navigateToRelatedQuestion = (questionId: string) => {
+    // Find the question in all categories
+    for (const category of categories) {
+      const question = category.questions.find(q => q.id === questionId)
+      if (question) {
+        setSelectedCategory(category.id)
+        setExpandedQuestion(questionId)
+        // Scroll to the question
+        setTimeout(() => {
+          const element = document.getElementById(`faq-question-${questionId}`)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        }, 100)
+        break
+      }
+    }
   }
 
   // Load feedback state from localStorage
@@ -212,13 +238,17 @@ export const FAQ: React.FC = () => {
                 {questions.map(question => (
                   <div 
                     key={question.id} 
-                    className={`faq__item ${expandedQuestion === question.id ? 'is-expanded' : ''}`}
+                    id={`faq-question-${question.id}`}
+                    className={`faq__item ${expandedQuestion === question.id ? 'is-expanded' : ''} ${question.is_featured ? 'is-featured' : ''}`}
                   >
                     <button
                       className="faq__question"
                       onClick={() => toggleQuestion(question.id)}
                     >
-                      <span className="faq__question-text">{question.question}</span>
+                      <span className="faq__question-text">
+                        {question.is_featured && <span className="faq__featured-badge">⭐</span>}
+                        {question.question}
+                      </span>
                       <span className="faq__question-icon">
                         {expandedQuestion === question.id ? (
                           <ChevronUp size={20} />
@@ -268,6 +298,24 @@ export const FAQ: React.FC = () => {
                             </span>
                           )}
                         </div>
+                        {question.related_questions && question.related_questions.length > 0 && (
+                          <div className="faq__related">
+                            <h4 className="faq__related-title">
+                              {t('faq.relatedQuestions') || 'Related Questions'}
+                            </h4>
+                            <div className="faq__related-list">
+                              {question.related_questions.map(related => (
+                                <button
+                                  key={related.id}
+                                  className="faq__related-item"
+                                  onClick={() => navigateToRelatedQuestion(related.id)}
+                                >
+                                  {related.question}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
