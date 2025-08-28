@@ -2,18 +2,18 @@
 
 .notification-provider {
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   right: 20px;
   z-index: var(--z-toast, 10000);
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 12px;
   max-width: 420px;
   width: 100%;
   pointer-events: none;
 
   @media (max-width: 768px) {
-    top: 10px;
+    bottom: 10px;
     right: 10px;
     left: 10px;
     max-width: none;
@@ -238,22 +238,22 @@
 // Animations
 @keyframes slideInRight {
   from {
-    transform: translateX(calc(100% + 20px));
+    transform: translateY(calc(100% + 20px)) translateX(100%);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: translateY(0) translateX(0);
     opacity: 1;
   }
 }
 
 @keyframes slideOutRight {
   from {
-    transform: translateX(0);
+    transform: translateY(0) translateX(0);
     opacity: 1;
   }
   to {
-    transform: translateX(calc(100% + 20px));
+    transform: translateY(calc(100% + 20px)) translateX(100%);
     opacity: 0;
   }
 }
