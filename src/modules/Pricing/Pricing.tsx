@@ -51,7 +51,9 @@ export const Pricing: React.FC = () => {
 
   const validateAmount = (amount: number): boolean => {
     if (!publicSettings) return false
-    return amount >= publicSettings.minimum_deposit && amount <= publicSettings.maximum_deposit
+    const minDeposit = publicSettings.minimum_deposit || 5
+    const maxDeposit = publicSettings.maximum_deposit || 10000
+    return amount >= minDeposit && amount <= maxDeposit
   }
 
   const handleStripePayment = async (amount: number) => {
@@ -70,7 +72,7 @@ export const Pricing: React.FC = () => {
       }
 
       if (window.Stripe && publicSettings?.stripe_public_key) {
-        const stripe = window.Stripe(publicSettings.stripe_public_key)
+        const stripe = window.Stripe(publicSettings.stripe_public_key || '')
         
         const { error } = await stripe.confirmCardPayment(paymentIntent.client_secret, {
           payment_method: {
@@ -195,7 +197,7 @@ export const Pricing: React.FC = () => {
         <div className="pricing__tiers-section">
           <h2 className="pricing__section-title">📄 Document Analysis Pricing</h2>
           <div className="pricing__tiers">
-            {Object.entries(publicSettings.pricing_tiers).map(([tierKey, tier]) => (
+            {publicSettings.pricing_tiers && Object.entries(publicSettings.pricing_tiers).map(([tierKey, tier]) => (
               <div key={tierKey} className="pricing__tier">
                 <div className="pricing__tier-header">
                   <h3 className="pricing__tier-name">
@@ -227,7 +229,7 @@ export const Pricing: React.FC = () => {
           <div className="pricing__recommended">
             <h3>Recommended amounts</h3>
             <div className="pricing__amount-buttons">
-              {publicSettings.recommended_amounts.map((amount, index) => (
+              {(publicSettings.recommended_amounts || [5, 10, 20, 50, 100]).map((amount, index) => (
                 <button
                   key={index}
                   className={`pricing__amount-btn ${selectedAmount === amount ? 'active' : ''}`}
@@ -253,23 +255,23 @@ export const Pricing: React.FC = () => {
                 type="number"
                 value={customAmount}
                 onChange={(e) => handleCustomAmountChange(e.target.value)}
-                placeholder={`${publicSettings.minimum_deposit} - ${publicSettings.maximum_deposit}`}
-                min={publicSettings.minimum_deposit}
-                max={publicSettings.maximum_deposit}
+                placeholder={`${publicSettings.minimum_deposit || 5} - ${publicSettings.maximum_deposit || 10000}`}
+                min={publicSettings.minimum_deposit || 5}
+                max={publicSettings.maximum_deposit || 10000}
                 step="0.01"
               />
             </div>
             <small className="pricing__limits">
-              Minimum: €{publicSettings.minimum_deposit}, Maximum: €{publicSettings.maximum_deposit}
+              Minimum: €{publicSettings.minimum_deposit || 5}, Maximum: €{publicSettings.maximum_deposit || 10000}
             </small>
           </div>
 
           {/* Payment Provider Selection */}
-          {(publicSettings.stripe_enabled || publicSettings.paypal_enabled) && (
+          {(publicSettings?.stripe_enabled || publicSettings?.paypal_enabled) && (
             <div className="pricing__payment-methods">
               <h3>Choose payment method</h3>
               <div className="pricing__method-buttons">
-                {publicSettings.stripe_enabled && (
+                {publicSettings?.stripe_enabled && (
                   <button
                     className={`pricing__method-btn ${paymentProvider === 'stripe' ? 'active' : ''}`}
                     onClick={() => setPaymentProvider('stripe')}
@@ -280,7 +282,7 @@ export const Pricing: React.FC = () => {
                   </button>
                 )}
                 
-                {publicSettings.paypal_enabled && (
+                {publicSettings?.paypal_enabled && (
                   <button
                     className={`pricing__method-btn ${paymentProvider === 'paypal' ? 'active' : ''}`}
                     onClick={() => setPaymentProvider('paypal')}
