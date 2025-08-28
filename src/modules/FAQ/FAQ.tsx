@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { LoadingSpinner } from '@components/LoadingSpinner'
 import './FAQ.scss'
 
@@ -21,6 +21,12 @@ interface FAQQuestion {
   category_id: string
   category_name: string
   is_featured?: boolean
+  helpful_count?: number
+  not_helpful_count?: number
+}
+
+interface FeedbackState {
+  [questionId: string]: 'helpful' | 'not_helpful' | null
 }
 
 export const FAQ: React.FC = () => {
@@ -31,6 +37,8 @@ export const FAQ: React.FC = () => {
   const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [feedbackState, setFeedbackState] = useState<FeedbackState>({})
+  const [submittingFeedback, setSubmittingFeedback] = useState<string | null>(null)
 
   // Fetch FAQ data
   const fetchFAQData = useCallback(async () => {
@@ -66,6 +74,82 @@ export const FAQ: React.FC = () => {
   const getCurrentCategoryQuestions = () => {
     const category = categories.find(cat => cat.id === selectedCategory)
     return category?.questions || []
+  }
+
+  // Load feedback state from localStorage
+  useEffect(() => {
+    const savedFeedback = localStorage.getItem('faq_feedback')
+    if (savedFeedback) {
+      try {
+        setFeedbackState(JSON.parse(savedFeedback))
+      } catch (e) {
+        console.error('Failed to load feedback state:', e)
+      }
+    }
+  }, [])
+
+  // Submit feedback for a question
+  const submitFeedback = async (questionId: string, isHelpful: boolean) => {
+    // Check if already submitted
+    if (feedbackState[questionId]) {
+      return
+    }
+
+    setSubmittingFeedback(questionId)
+    
+    try {
+      const response = await fetch(`/api/faq/questions/${questionId}/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question_id: questionId,
+          is_helpful: isHelpful,
+          session_id: sessionStorage.getItem('session_id') || generateSessionId()
+        })
+      })
+
+      if (response.ok) {
+        // Update local state
+        const newFeedbackState = {
+          ...feedbackState,
+          [questionId]: isHelpful ? 'helpful' : 'not_helpful'
+        }
+        setFeedbackState(newFeedbackState)
+        
+        // Save to localStorage
+        localStorage.setItem('faq_feedback', JSON.stringify(newFeedbackState))
+        
+        // Update question counts locally
+        setCategories(prevCategories => 
+          prevCategories.map(cat => ({
+            ...cat,
+            questions: cat.questions.map(q => {
+              if (q.id === questionId) {
+                return {
+                  ...q,
+                  helpful_count: (q.helpful_count || 0) + (isHelpful ? 1 : 0),
+                  not_helpful_count: (q.not_helpful_count || 0) + (!isHelpful ? 1 : 0)
+                }
+              }
+              return q
+            })
+          }))
+        )
+      }
+    } catch (error) {
+      console.error('Failed to submit feedback:', error)
+    } finally {
+      setSubmittingFeedback(null)
+    }
+  }
+
+  // Generate session ID if not exists
+  const generateSessionId = () => {
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    sessionStorage.setItem('session_id', sessionId)
+    return sessionId
   }
 
   if (loading) {
@@ -149,6 +233,40 @@ export const FAQ: React.FC = () => {
                           {question.answer.split('\n').map((paragraph, idx) => (
                             paragraph.trim() && <p key={idx}>{paragraph}</p>
                           ))}
+                        </div>
+                        <div className="faq__feedback">
+                          <span className="faq__feedback-label">
+                            {t('faq.wasHelpful') || 'Was this answer helpful?'}
+                          </span>
+                          <div className="faq__feedback-buttons">
+                            <button
+                              className={`faq__feedback-btn faq__feedback-btn--helpful ${
+                                feedbackState[question.id] === 'helpful' ? 'active' : ''
+                              }`}
+                              onClick={() => submitFeedback(question.id, true)}
+                              disabled={!!feedbackState[question.id] || submittingFeedback === question.id}
+                              title={t('faq.helpful') || 'Helpful'}
+                            >
+                              <ThumbsUp size={16} />
+                              <span>{question.helpful_count || 0}</span>
+                            </button>
+                            <button
+                              className={`faq__feedback-btn faq__feedback-btn--not-helpful ${
+                                feedbackState[question.id] === 'not_helpful' ? 'active' : ''
+                              }`}
+                              onClick={() => submitFeedback(question.id, false)}
+                              disabled={!!feedbackState[question.id] || submittingFeedback === question.id}
+                              title={t('faq.notHelpful') || 'Not helpful'}
+                            >
+                              <ThumbsDown size={16} />
+                              <span>{question.not_helpful_count || 0}</span>
+                            </button>
+                          </div>
+                          {feedbackState[question.id] && (
+                            <span className="faq__feedback-thanks">
+                              {t('faq.thanksFeedback') || 'Thank you for your feedback!'}
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}

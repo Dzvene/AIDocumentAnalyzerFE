@@ -316,6 +316,175 @@
   }
 }
 
+// Feedback Section
+.faq__feedback {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0 0;
+  margin-top: 16px;
+  border-top: 1px solid #e8e8e8;
+  
+  &-label {
+    font-size: 14px;
+    color: #666666;
+    font-weight: 500;
+  }
+  
+  &-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  &-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666666;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover:not(:disabled) {
+      background: #ffffff;
+      border-color: #cccccc;
+      color: #333333;
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    &--helpful {
+      &.active {
+        background: #e8f5e9;
+        border-color: #4caf50;
+        color: #2e7d32;
+      }
+      
+      &:hover:not(:disabled):not(.active) {
+        background: #f1f8f2;
+        border-color: #81c784;
+      }
+    }
+    
+    &--not-helpful {
+      &.active {
+        background: #ffebee;
+        border-color: #f44336;
+        color: #c62828;
+      }
+      
+      &:hover:not(:disabled):not(.active) {
+        background: #fff5f5;
+        border-color: #ef9a9a;
+      }
+    }
+    
+    span {
+      font-weight: 600;
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  &-thanks {
+    margin-left: auto;
+    font-size: 13px;
+    color: #4caf50;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @include mobile {
+    flex-wrap: wrap;
+    
+    &-label {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    
+    &-thanks {
+      width: 100%;
+      margin-top: 8px;
+      text-align: center;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark theme for feedback
+[data-theme="dark"] {
+  .faq__feedback {
+    border-top-color: #2a2a2a;
+    
+    &-label {
+      color: #999999;
+    }
+    
+    &-btn {
+      color: #999999;
+      background: #1a1a1a;
+      border-color: #333333;
+      
+      &:hover:not(:disabled) {
+        background: #2a2a2a;
+        border-color: #4a4a4a;
+        color: #cccccc;
+      }
+      
+      &--helpful {
+        &.active {
+          background: #1b3a1b;
+          border-color: #4caf50;
+          color: #81c784;
+        }
+        
+        &:hover:not(:disabled):not(.active) {
+          background: #1e2e1e;
+          border-color: #2e7d32;
+        }
+      }
+      
+      &--not-helpful {
+        &.active {
+          background: #3a1b1b;
+          border-color: #f44336;
+          color: #ef9a9a;
+        }
+        
+        &:hover:not(:disabled):not(.active) {
+          background: #2e1e1e;
+          border-color: #c62828;
+        }
+      }
+    }
+    
+    &-thanks {
+      color: #81c784;
+    }
+  }
+}
+
 // Loading & Error States
 .faq-loading,
 .faq-error {
