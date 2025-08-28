@@ -19,6 +19,10 @@ import DocumentAnalyzer from '@modules/DocumentAnalyzer'
 import Login from '@modules/Login'
 import { Register, ForgotPassword } from '@modules/Auth'
 import { FAQ } from '@modules/FAQ'
+import Glossary from '@modules/Glossary'
+import { Pricing } from '@modules/Pricing'
+import { Profile } from '@components/Profile'
+import { NotFound } from '@components/NotFound'
 
 const AppContent: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -43,9 +47,20 @@ const AppContent: React.FC = () => {
           <Route path={ROUTES.FAQ} element={<FAQ />} />
           <Route path={ROUTES.FAQ_QUESTION} element={<FAQ />} />
           
+          <Route path={ROUTES.GLOSSARY} element={<Glossary />} />
+          <Route path={ROUTES.GLOSSARY_TERM} element={<Glossary />} />
+          
+          <Route path="/pricing" element={<Pricing />} />
+          
           <Route path="/analyze" element={
             <ProtectedRoute>
               <DocumentAnalyzer />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           } />
           
@@ -54,32 +69,7 @@ const AppContent: React.FC = () => {
           } />
         </Route>
 
-        <Route path="*" element={
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            minHeight: '100vh',
-            textAlign: 'center'
-          }}>
-            <h1 style={{ fontSize: '4rem', marginBottom: '1rem' }}>404</h1>
-            <h2 style={{ fontSize: '1.5rem', color: '#666', marginBottom: '2rem' }}>
-              Страница не найдена
-            </h2>
-            <a href="/" style={{ 
-              color: '#667eea', 
-              textDecoration: 'none',
-              fontSize: '1.1rem',
-              padding: '10px 20px',
-              border: '2px solid #667eea',
-              borderRadius: '8px',
-              transition: 'all 0.3s'
-            }}>
-              Вернуться на главную
-            </a>
-          </div>
-        } />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   )

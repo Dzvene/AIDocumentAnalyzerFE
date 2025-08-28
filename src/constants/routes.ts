@@ -14,6 +14,8 @@ export const ROUTES = {
   SEARCH: '/search',
   FAQ: '/faq',
   FAQ_QUESTION: '/faq/:slug',
+  GLOSSARY: '/glossary',
+  GLOSSARY_TERM: '/glossary/:slug',
   
   // Auth routes
   LOGIN: '/login',
@@ -70,6 +72,8 @@ export const PUBLIC_ROUTES = [
   ROUTES.SEARCH,
   ROUTES.FAQ,
   ROUTES.FAQ_QUESTION,
+  ROUTES.GLOSSARY,
+  ROUTES.GLOSSARY_TERM,
   ROUTES.LOGIN,
   ROUTES.REGISTER,
   ROUTES.FORGOT_PASSWORD,

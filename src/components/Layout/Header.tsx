@@ -103,6 +103,18 @@ const Header: React.FC = () => {
             >
               {t('navigation.vendors')}
             </Link>
+            <Link
+              to="/faq"
+              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+            >
+              {t('navigation.faq')}
+            </Link>
+            <Link
+              to="/glossary"
+              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+            >
+              {t('navigation.glossary')}
+            </Link>
           </nav>
 
           {/* Right Side Icons */}
@@ -269,6 +281,20 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t('navigation.vendors')}
+              </Link>
+              <Link
+                to="/faq"
+                className="block px-3 py-2 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {t('navigation.faq')}
+              </Link>
+              <Link
+                to="/glossary"
+                className="block px-3 py-2 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {t('navigation.glossary')}
               </Link>
               
               {!isAuthenticated && (

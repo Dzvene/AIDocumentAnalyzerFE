@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { logout } from '@store/slices/authSlice'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@components/LanguageSelector'
+import { UserBalance } from '@components/UserBalance'
 import './Header.scss'
 
 export const Header: React.FC = () => {
@@ -63,15 +64,27 @@ export const Header: React.FC = () => {
 
         <div className="header__actions">
           <LanguageSelector />
+          
+          {isAuthenticated && (
+            <UserBalance 
+              size="small" 
+              onClick={() => navigate('/pricing')}
+              showAddFunds={true}
+            />
+          )}
 
           {isAuthenticated ? (
             <div className="header__user">
-              <div className="header__user-info">
+              <Link 
+                to="/profile" 
+                className="header__user-info"
+                title="Go to Profile"
+              >
                 <span className="header__user-avatar">
                   {user?.name?.charAt(0).toUpperCase() || 'U'}
                 </span>
                 <span className="header__user-name">{user?.name || 'User'}</span>
-              </div>
+              </Link>
               <button 
                 className="header__logout-btn"
                 onClick={handleLogout}
