@@ -101,15 +101,19 @@ export const FAQ: React.FC = () => {
           {/* Left Sidebar - Categories */}
           <div className="faq__sidebar">
             <div className="faq__categories">
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  className={`faq__category-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  {category.name}
-                </button>
-              ))}
+              {categories.map(category => {
+                const questionsCount = category.questions?.length || 0
+                return (
+                  <button
+                    key={category.id}
+                    className={`faq__category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory(category.id)}
+                  >
+                    <span className="faq__category-name">{category.name}</span>
+                    <span className="faq__category-count">{questionsCount}</span>
+                  </button>
+                )
+              })}
             </div>
           </div>
 
