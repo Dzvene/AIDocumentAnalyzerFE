@@ -35,6 +35,24 @@
     "or": "or",
     "retry": "Retry"
   },
+  "billing": {
+    "loading_balance": "Loading balance...",
+    "balance_unavailable": "Balance unavailable",
+    "account_balance": "Account Balance",
+    "add_funds": "Add Funds",
+    "low_balance": "Low balance - add funds",
+    "low_balance_short": "Low",
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal",
+    "payment": "Payment",
+    "refund": "Refund",
+    "transaction_history": "Transaction History",
+    "no_transactions": "No transactions yet",
+    "processing": "Processing...",
+    "payment_successful": "Payment successful!",
+    "payment_failed": "Payment failed",
+    "insufficient_balance": "Insufficient balance"
+  },
   "navigation": {
     "home": "Home",
     "categories": "Categories",
@@ -47,7 +65,15 @@
     "profile": "Profile",
     "dashboard": "Dashboard",
     "orders": "Orders",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "faq": "FAQ",
+    "glossary": "Glossary",
+    "products": "Products",
+    "vendors": "Vendors",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
   },
   "home": {
     "hero": {
@@ -401,6 +427,7 @@
     "termsOfService": "Terms of Service",
     "terms": "Terms of Service",
     "faq": "FAQ",
+    "glossary": "Glossary",
     "customerService": "Customer Service",
     "shippingInfo": "Shipping Information",
     "returnPolicy": "Return Policy",
@@ -409,5 +436,49 @@
     "subscribeNewsletter": "Subscribe to our newsletter",
     "socialMedia": "Follow Us",
     "copyright": "All rights reserved."
+  },
+  "glossary": {
+    "title": "Glossary",
+    "description": "Browse and search technical terms and definitions",
+    "searchPlaceholder": "Search terms...",
+    "search": "Search",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "tabs": {
+      "all": "All Terms",
+      "popular": "Popular",
+      "recent": "Recent Searches"
+    },
+    "views": "Views",
+    "viewDetails": "View Details",
+    "noTerms": "No terms found",
+    "tryDifferentSearch": "Try a different search or category",
+    "results": "results",
+    "shortDescription": "Short Description",
+    "fullDescription": "Full Description",
+    "usageExamples": "Usage Examples",
+    "synonyms": "Synonyms",
+    "abbreviations": "Abbreviations",
+    "relatedTerms": "Related Terms",
+    "lastUpdated": "Last updated",
+    "close": "Close",
+    "stats": {
+      "totalTerms": "Total Terms",
+      "categories": "Categories",
+      "searches": "Total Searches",
+      "popularTerm": "Most Popular"
+    },
+    "error": {
+      "loadTerms": "Error loading terms",
+      "search": "Error searching terms",
+      "loadTermDetail": "Error loading term details"
+    }
+  },
+  "notFound": {
+    "title": "Lost in Space",
+    "description": "Houston, we have a problem! The page you're looking for has drifted into the void.",
+    "goHome": "Return to Earth",
+    "goBack": "Go Back",
+    "funFact": "💡 Fun fact: Error 404 was named after room 404 at CERN, where the World Wide Web was developed."
   }
 }
