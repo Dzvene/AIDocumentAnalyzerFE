@@ -2,10 +2,13 @@
 @import '@styles/mixins.scss';
 
 .faq {
-  min-height: calc(100vh - 120px);
-  padding: 2rem 1rem;
+  min-height: calc(100vh - 180px);
+  padding: 3rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: var(--color-bg-primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
 
   &__header {
     text-align: center;
@@ -72,8 +75,16 @@
   }
 
   &__sidebar {
+    background: var(--color-bg-secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+    
     @include tablet {
       order: 2;
+      position: static;
     }
 
     h3 {
@@ -146,9 +157,11 @@
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
+    margin-bottom: 1rem;
 
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-color: var(--color-primary);
     }
 
     &-header {
@@ -458,6 +471,11 @@
     min-height: 400px;
     text-align: center;
     color: var(--color-text-secondary);
+    background: var(--color-bg-primary);
+    border-radius: 12px;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 3rem;
 
     svg {
       color: var(--color-text-tertiary);

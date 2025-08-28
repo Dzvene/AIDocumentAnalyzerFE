@@ -597,5 +597,88 @@
       "analysisError": "Error analyzing document",
       "generalError": "An error occurred during analysis. Please try again."
     }
+  },
+  "pricing": {
+    "title": "Add Funds to Your Account",
+    "subtitle": "Top up your balance to analyze more documents with our AI-powered analysis",
+    "loading": "Loading pricing information...",
+    "error": "Unable to load pricing information",
+    "documentPricing": {
+      "title": "Document Analysis Pricing",
+      "pages": "pages",
+      "perPage": "/page",
+      "example": "Example",
+      "unlimited": "100+ pages"
+    },
+    "addFunds": {
+      "title": "Add Funds",
+      "recommendedAmounts": "Recommended amounts",
+      "popular": "Popular",
+      "bestValue": "Best Value",
+      "premium": "Premium",
+      "customAmount": "Or enter custom amount",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "currency": "€"
+    },
+    "paymentMethods": {
+      "title": "Choose payment method",
+      "creditCard": "Credit Card",
+      "viaStripe": "via Stripe",
+      "paypal": "PayPal",
+      "securePayments": "Secure payments"
+    },
+    "paymentButton": {
+      "processing": "Processing...",
+      "addFunds": "Add {{amount}} to Account",
+      "loginNotice": "Please <1>log in</1> to add funds to your account"
+    },
+    "features": {
+      "title": "What you get",
+      "aiAnalysis": {
+        "title": "AI-Powered Analysis",
+        "description": "Advanced artificial intelligence analyzes your documents for risks, important clauses, and recommendations"
+      },
+      "instantResults": {
+        "title": "Instant Results",
+        "description": "Get comprehensive analysis results within seconds of uploading your document"
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "description": "Your documents are processed securely and never stored permanently on our servers"
+      },
+      "detailedReports": {
+        "title": "Detailed Reports",
+        "description": "Receive structured analysis reports with risk assessments and actionable recommendations"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "howPricingWorks": {
+        "question": "How does the pricing work?",
+        "answer": "We charge per page analyzed, with volume discounts for larger documents. Funds are deducted from your account balance when you analyze a document."
+      },
+      "isSafe": {
+        "question": "Is it safe to add funds?",
+        "answer": "Yes, all payments are processed securely through Stripe and PayPal. We never store your payment information."
+      },
+      "refund": {
+        "question": "Can I get a refund?",
+        "answer": "Unused funds in your account can be refunded. Contact our support team for refund requests."
+      },
+      "expiration": {
+        "question": "Do funds expire?",
+        "answer": "No, funds in your account never expire and can be used anytime for document analysis."
+      }
+    },
+    "validation": {
+      "amountRange": "Amount must be between €{{min}} and €{{max}}",
+      "loginRequired": "Please log in to add funds"
+    },
+    "toast": {
+      "paymentSuccess": "Payment successful!",
+      "paymentFailed": "Payment failed",
+      "noApprovalUrl": "No approval URL received"
+    }
   }
 }

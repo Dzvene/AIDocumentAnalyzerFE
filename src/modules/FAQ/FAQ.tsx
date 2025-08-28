@@ -277,10 +277,11 @@ export const FAQ: React.FC = () => {
                   </span>
                 </div>
                 
-                <div 
-                  className="faq__answer"
-                  dangerouslySetInnerHTML={{ __html: selectedQuestion.answer }}
-                />
+                <div className="faq__answer">
+                  {selectedQuestion.answer.split('\n').map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
 
                 {/* Feedback */}
                 <div className="faq__feedback">
@@ -356,12 +357,11 @@ export const FAQ: React.FC = () => {
                       
                       {expandedQuestions.has(question.id) && (
                         <div className="faq__question-content">
-                          <div 
-                            className="faq__question-answer"
-                            dangerouslySetInnerHTML={{ 
-                              __html: question.answer.substring(0, 200) + '...'
-                            }}
-                          />
+                          <div className="faq__question-answer">
+                            {question.answer.length > 200 
+                              ? question.answer.substring(0, 200) + '...'
+                              : question.answer}
+                          </div>
                           <button
                             className="faq__read-more"
                             onClick={(e) => {
