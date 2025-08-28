@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { fetchPublicSettings, fetchUserBalance, selectPublicSettings, selectUserBalance, selectBillingLoading } from '@store/slices/billingSlice'
 import { billingApi } from '@api/billing.api'
@@ -84,15 +85,15 @@ export const Pricing: React.FC = () => {
         })
 
         if (error) {
-          toast.error(error.message || 'Payment failed')
+          toast.error(error.message || t('pricing.toast.paymentFailed'))
         } else {
-          toast.success('Payment successful!')
+          toast.success(t('pricing.toast.paymentSuccess'))
           // Refresh balance
           dispatch(fetchUserBalance())
         }
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Payment failed')
+      toast.error(error.response?.data?.detail || t('pricing.toast.paymentFailed'))
     } finally {
       setProcessingPayment(false)
     }
@@ -112,10 +113,10 @@ export const Pricing: React.FC = () => {
       if (paypalOrder.approval_url) {
         window.location.href = paypalOrder.approval_url
       } else {
-        throw new Error('No approval URL received')
+        throw new Error(t('pricing.toast.noApprovalUrl'))
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Payment failed')
+      toast.error(error.response?.data?.detail || t('pricing.toast.paymentFailed'))
       setProcessingPayment(false)
     }
   }
@@ -124,12 +125,17 @@ export const Pricing: React.FC = () => {
     const amount = getSelectedAmount()
     
     if (!validateAmount(amount)) {
-      toast.error(`Amount must be between €${publicSettings?.minimum_deposit} and €${publicSettings?.maximum_deposit}`)
+      toast.error(
+        t('pricing.validation.amountRange', {
+          min: publicSettings?.minimum_deposit || 5,
+          max: publicSettings?.maximum_deposit || 10000
+        })
+      )
       return
     }
 
     if (!isAuthenticated) {
-      toast.error('Please log in to add funds')
+      toast.error(t('pricing.validation.loginRequired'))
       return
     }
 
@@ -160,7 +166,7 @@ export const Pricing: React.FC = () => {
       <div className="pricing">
         <div className="pricing__loading">
           <div className="pricing__spinner"></div>
-          <span>Loading pricing information...</span>
+          <span>{t('pricing.loading')}</span>
         </div>
       </div>
     )
@@ -170,21 +176,25 @@ export const Pricing: React.FC = () => {
     return (
       <div className="pricing">
         <div className="pricing__error">
-          <span>⚠️ Unable to load pricing information</span>
+          <span>⚠️ {t('pricing.error')}</span>
         </div>
       </div>
     )
   }
+
+  const amountLabels = [
+    t('pricing.addFunds.popular'),
+    t('pricing.addFunds.bestValue'),
+    t('pricing.addFunds.premium')
+  ]
 
   return (
     <div className="pricing">
       <div className="pricing__container">
         {/* Header */}
         <div className="pricing__header">
-          <h1 className="pricing__title">💰 Add Funds to Your Account</h1>
-          <p className="pricing__subtitle">
-            Top up your balance to analyze more documents with our AI-powered analysis
-          </p>
+          <h1 className="pricing__title">💰 {t('pricing.title')}</h1>
+          <p className="pricing__subtitle">{t('pricing.subtitle')}</p>
           
           {isAuthenticated && (
             <div className="pricing__current-balance">
@@ -195,26 +205,27 @@ export const Pricing: React.FC = () => {
 
         {/* Document Analysis Pricing */}
         <div className="pricing__tiers-section">
-          <h2 className="pricing__section-title">📄 Document Analysis Pricing</h2>
+          <h2 className="pricing__section-title">📄 {t('pricing.documentPricing.title')}</h2>
           <div className="pricing__tiers">
             {publicSettings.pricing_tiers && Object.entries(publicSettings.pricing_tiers).map(([tierKey, tier]) => (
               <div key={tierKey} className="pricing__tier">
                 <div className="pricing__tier-header">
                   <h3 className="pricing__tier-name">
                     {tier.max_pages === 'unlimited' 
-                      ? `100+ pages` 
-                      : `1-${tier.max_pages} pages`
+                      ? t('pricing.documentPricing.unlimited')
+                      : `1-${tier.max_pages} ${t('pricing.documentPricing.pages')}`
                     }
                   </h3>
                   <div className="pricing__tier-price">
-                    €{tier.rate.toFixed(2)}<span>/page</span>
+                    €{tier.rate.toFixed(2)}
+                    <span>{t('pricing.documentPricing.perPage')}</span>
                   </div>
                 </div>
                 <div className="pricing__tier-description">
                   {tier.description}
                 </div>
                 <div className="pricing__tier-example">
-                  Example: {tier.max_pages === 'unlimited' ? '200' : Math.min(10, Number(tier.max_pages))} pages = €{(tier.rate * (tier.max_pages === 'unlimited' ? 200 : Math.min(10, Number(tier.max_pages)))).toFixed(2)}
+                  {t('pricing.documentPricing.example')}: {tier.max_pages === 'unlimited' ? '200' : Math.min(10, Number(tier.max_pages))} {t('pricing.documentPricing.pages')} = €{(tier.rate * (tier.max_pages === 'unlimited' ? 200 : Math.min(10, Number(tier.max_pages)))).toFixed(2)}
                 </div>
               </div>
             ))}
@@ -223,11 +234,11 @@ export const Pricing: React.FC = () => {
 
         {/* Add Funds Section */}
         <div className="pricing__deposit-section">
-          <h2 className="pricing__section-title">💳 Add Funds</h2>
+          <h2 className="pricing__section-title">💳 {t('pricing.addFunds.title')}</h2>
           
           {/* Recommended Amounts */}
           <div className="pricing__recommended">
-            <h3>Recommended amounts</h3>
+            <h3>{t('pricing.addFunds.recommendedAmounts')}</h3>
             <div className="pricing__amount-buttons">
               {(publicSettings.recommended_amounts || [5, 10, 20, 50, 100]).map((amount, index) => (
                 <button
@@ -237,9 +248,7 @@ export const Pricing: React.FC = () => {
                 >
                   <span className="pricing__amount-value">€{amount.toFixed(2)}</span>
                   <span className="pricing__amount-label">
-                    {index === 0 && 'Popular'}
-                    {index === 1 && 'Best Value'}
-                    {index === 2 && 'Premium'}
+                    {amountLabels[index] || ''}
                   </span>
                 </button>
               ))}
@@ -248,9 +257,9 @@ export const Pricing: React.FC = () => {
 
           {/* Custom Amount */}
           <div className="pricing__custom">
-            <h3>Or enter custom amount</h3>
+            <h3>{t('pricing.addFunds.customAmount')}</h3>
             <div className="pricing__custom-input">
-              <span className="pricing__currency">€</span>
+              <span className="pricing__currency">{t('pricing.addFunds.currency')}</span>
               <input
                 type="number"
                 value={customAmount}
@@ -262,14 +271,14 @@ export const Pricing: React.FC = () => {
               />
             </div>
             <small className="pricing__limits">
-              Minimum: €{publicSettings.minimum_deposit || 5}, Maximum: €{publicSettings.maximum_deposit || 10000}
+              {t('pricing.addFunds.minimum')}: €{publicSettings.minimum_deposit || 5}, {t('pricing.addFunds.maximum')}: €{publicSettings.maximum_deposit || 10000}
             </small>
           </div>
 
           {/* Payment Provider Selection */}
           {(publicSettings?.stripe_enabled || publicSettings?.paypal_enabled) && (
             <div className="pricing__payment-methods">
-              <h3>Choose payment method</h3>
+              <h3>{t('pricing.paymentMethods.title')}</h3>
               <div className="pricing__method-buttons">
                 {publicSettings?.stripe_enabled && (
                   <button
@@ -277,8 +286,8 @@ export const Pricing: React.FC = () => {
                     onClick={() => setPaymentProvider('stripe')}
                   >
                     <span className="pricing__method-icon">💳</span>
-                    <span className="pricing__method-name">Credit Card</span>
-                    <small>via Stripe</small>
+                    <span className="pricing__method-name">{t('pricing.paymentMethods.creditCard')}</span>
+                    <small>{t('pricing.paymentMethods.viaStripe')}</small>
                   </button>
                 )}
                 
@@ -288,8 +297,8 @@ export const Pricing: React.FC = () => {
                     onClick={() => setPaymentProvider('paypal')}
                   >
                     <span className="pricing__method-icon">🅿️</span>
-                    <span className="pricing__method-name">PayPal</span>
-                    <small>Secure payments</small>
+                    <span className="pricing__method-name">{t('pricing.paymentMethods.paypal')}</span>
+                    <small>{t('pricing.paymentMethods.securePayments')}</small>
                   </button>
                 )}
               </div>
@@ -306,18 +315,18 @@ export const Pricing: React.FC = () => {
               {processingPayment ? (
                 <>
                   <div className="pricing__spinner-small"></div>
-                  Processing...
+                  {t('pricing.paymentButton.processing')}
                 </>
               ) : (
                 <>
-                  💰 Add €{getSelectedAmount().toFixed(2)} to Account
+                  💰 {t('pricing.paymentButton.addFunds', { amount: `€${getSelectedAmount().toFixed(2)}` })}
                 </>
               )}
             </button>
             
             {!isAuthenticated && (
               <p className="pricing__login-notice">
-                Please <a href="/login">log in</a> to add funds to your account
+                {t('pricing.validation.loginRequired')} <Link to="/login">{t('auth.login')}</Link>
               </p>
             )}
           </div>
@@ -325,50 +334,50 @@ export const Pricing: React.FC = () => {
 
         {/* Features */}
         <div className="pricing__features">
-          <h2 className="pricing__section-title">✨ What you get</h2>
+          <h2 className="pricing__section-title">✨ {t('pricing.features.title')}</h2>
           <div className="pricing__features-grid">
             <div className="pricing__feature">
               <span className="pricing__feature-icon">🤖</span>
-              <h3>AI-Powered Analysis</h3>
-              <p>Advanced artificial intelligence analyzes your documents for risks, important clauses, and recommendations</p>
+              <h3>{t('pricing.features.aiAnalysis.title')}</h3>
+              <p>{t('pricing.features.aiAnalysis.description')}</p>
             </div>
             <div className="pricing__feature">
               <span className="pricing__feature-icon">⚡</span>
-              <h3>Instant Results</h3>
-              <p>Get comprehensive analysis results within seconds of uploading your document</p>
+              <h3>{t('pricing.features.instantResults.title')}</h3>
+              <p>{t('pricing.features.instantResults.description')}</p>
             </div>
             <div className="pricing__feature">
               <span className="pricing__feature-icon">🔒</span>
-              <h3>Secure & Private</h3>
-              <p>Your documents are processed securely and never stored permanently on our servers</p>
+              <h3>{t('pricing.features.secure.title')}</h3>
+              <p>{t('pricing.features.secure.description')}</p>
             </div>
             <div className="pricing__feature">
               <span className="pricing__feature-icon">📊</span>
-              <h3>Detailed Reports</h3>
-              <p>Receive structured analysis reports with risk assessments and actionable recommendations</p>
+              <h3>{t('pricing.features.detailedReports.title')}</h3>
+              <p>{t('pricing.features.detailedReports.description')}</p>
             </div>
           </div>
         </div>
 
         {/* FAQ */}
         <div className="pricing__faq">
-          <h2 className="pricing__section-title">❓ Frequently Asked Questions</h2>
+          <h2 className="pricing__section-title">❓ {t('pricing.faq.title')}</h2>
           <div className="pricing__faq-items">
             <div className="pricing__faq-item">
-              <h3>How does the pricing work?</h3>
-              <p>We charge per page analyzed, with volume discounts for larger documents. Funds are deducted from your account balance when you analyze a document.</p>
+              <h3>{t('pricing.faq.howPricingWorks.question')}</h3>
+              <p>{t('pricing.faq.howPricingWorks.answer')}</p>
             </div>
             <div className="pricing__faq-item">
-              <h3>Is it safe to add funds?</h3>
-              <p>Yes, all payments are processed securely through Stripe and PayPal. We never store your payment information.</p>
+              <h3>{t('pricing.faq.isSafe.question')}</h3>
+              <p>{t('pricing.faq.isSafe.answer')}</p>
             </div>
             <div className="pricing__faq-item">
-              <h3>Can I get a refund?</h3>
-              <p>Unused funds in your account can be refunded. Contact our support team for refund requests.</p>
+              <h3>{t('pricing.faq.refund.question')}</h3>
+              <p>{t('pricing.faq.refund.answer')}</p>
             </div>
             <div className="pricing__faq-item">
-              <h3>Do funds expire?</h3>
-              <p>No, funds in your account never expire and can be used anytime for document analysis.</p>
+              <h3>{t('pricing.faq.expiration.question')}</h3>
+              <p>{t('pricing.faq.expiration.answer')}</p>
             </div>
           </div>
         </div>
