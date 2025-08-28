@@ -480,5 +480,122 @@
     "goHome": "Return to Earth",
     "goBack": "Go Back",
     "funFact": "💡 Fun fact: Error 404 was named after room 404 at CERN, where the World Wide Web was developed."
+  },
+  "documentAnalyzer": {
+    "title": "Document Analysis with AI",
+    "subtitle": "Upload a document and we'll find all the pitfalls and important conditions",
+    "upload": {
+      "dragDrop": "Drag document here or click to select",
+      "formats": "PDF, DOC, DOCX • Max. 50MB",
+      "countingPages": "Counting pages...",
+      "pages": "pages",
+      "removeFile": "Remove file"
+    },
+    "documentTypes": {
+      "title": "Document Type",
+      "rental": "Rental Agreement",
+      "insurance": "Insurance Policy",
+      "employment": "Employment Contract",
+      "purchase": "Purchase Agreement",
+      "loan": "Loan Agreement",
+      "custom": "Other Document"
+    },
+    "checks": {
+      "title": "What to check?",
+      "rental": {
+        "notice_period": "Notice periods",
+        "penalties": "Fines and penalties",
+        "special_conditions": "Special conditions",
+        "termination": "Termination conditions",
+        "deposit": "Deposit and its return",
+        "rent_increase": "Rent increase",
+        "maintenance": "Maintenance obligations"
+      },
+      "insurance": {
+        "exclusions": "Coverage exclusions",
+        "deductible": "Deductible",
+        "limits": "Payout limits",
+        "claim_deadlines": "Claim submission deadlines",
+        "cancellation": "Cancellation conditions",
+        "premium_changes": "Premium changes",
+        "waiting_period": "Waiting period"
+      },
+      "employment": {
+        "probation": "Probation period",
+        "notice_termination": "Notice periods",
+        "non_compete": "Non-compete clause",
+        "confidentiality": "Confidentiality",
+        "overtime": "Overtime work",
+        "benefits": "Benefits and compensation",
+        "intellectual_property": "Intellectual property"
+      },
+      "purchase": {
+        "warranties": "Warranties and guarantees",
+        "return_policy": "Return conditions",
+        "hidden_fees": "Hidden fees",
+        "delivery_terms": "Delivery terms",
+        "payment_terms": "Payment terms",
+        "ownership_transfer": "Ownership transfer"
+      },
+      "loan": {
+        "interest_rate": "Interest rate and its changes",
+        "hidden_commissions": "Hidden commissions",
+        "early_repayment": "Early repayment",
+        "default_consequences": "Default consequences",
+        "collateral": "Collateral and security",
+        "insurance_requirements": "Insurance requirements"
+      }
+    },
+    "customPrompt": {
+      "title": "Additional Questions",
+      "placeholder": "For example: Check confidentiality conditions, find mentions of third parties..."
+    },
+    "pricing": {
+      "pages": "pages",
+      "discount": "discount",
+      "tiers": {
+        "standard": "Up to 10 pages: €0.99/page",
+        "silver": "11-50 pages: €0.79/page",
+        "gold": "51-100 pages: €0.59/page",
+        "platinum": "100+ pages: €0.39/page"
+      }
+    },
+    "buttons": {
+      "startAnalysis": "Start Analysis",
+      "analyzing": "Analyzing document...",
+      "exportPdf": "Download PDF Report",
+      "newDocument": "New Document"
+    },
+    "results": {
+      "title": "Analysis Results",
+      "summary": "Brief Summary",
+      "checkedItems": "Item-by-item Check Results",
+      "customAnalysis": "Answer to Additional Question",
+      "question": "Question",
+      "answer": "Answer",
+      "relevantQuotes": "Relevant Quotes",
+      "risks": "Detected Risks and Important Conditions",
+      "riskLevels": {
+        "high": "High Risk",
+        "medium": "Medium Risk",
+        "low": "Low Risk",
+        "info": "Information"
+      },
+      "details": "Details",
+      "recommendation": "Recommendation",
+      "notFound": "Information on this item was not found in the document",
+      "noRisks": "No critical risks detected",
+      "positiveAspects": "Positive Aspects",
+      "recommendations": "Recommendations",
+      "keyTerms": "Key Terms",
+      "pricingInfo": "Analysis Cost",
+      "pages": "Pages"
+    },
+    "errors": {
+      "notAuthenticated": "You are not authenticated. Please log in.",
+      "aiNotConfigured": "AI service is not configured. Check server settings.",
+      "analysisError": "Error analyzing document",
+      "generalError": "An error occurred during analysis. Please try again."
+    }
   }
 }

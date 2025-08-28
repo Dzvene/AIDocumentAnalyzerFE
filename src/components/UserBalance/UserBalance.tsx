@@ -32,10 +32,11 @@ export const UserBalance: React.FC<UserBalanceProps> = ({
     return null
   }
 
-  const formatBalance = (amount: number, currency: string) => {
+  const formatBalance = (amount: number, currency?: string) => {
+    const currencyCode = currency || 'EUR'
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency,
+      currency: currencyCode,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(amount)

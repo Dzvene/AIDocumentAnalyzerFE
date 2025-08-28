@@ -23,14 +23,14 @@ import {
 import { profileApi } from '../../api/profileApi';
 
 interface BalanceSectionProps {
-  balance: number;
-  currency: string;
+  balance?: number;
+  currency?: string;
   onBalanceUpdate: () => void;
 }
 
 const BalanceSection: React.FC<BalanceSectionProps> = ({
-  balance,
-  currency,
+  balance = 0,
+  currency = 'EUR',
   onBalanceUpdate
 }) => {
   const [topupOpen, setTopupOpen] = useState(false);
@@ -39,17 +39,26 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const predefinedAmounts = [5, 10, 20, 50, 100];
+  
+  const formatCurrency = (amount: number, currencyCode: string = 'EUR') => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  };
 
   const handleTopup = async () => {
     const numAmount = parseFloat(amount);
     
     if (isNaN(numAmount) || numAmount < 5) {
-      setError('Minimum top-up amount is €5');
+      setError(`Minimum top-up amount is ${formatCurrency(5, currency)}`);
       return;
     }
 
     if (numAmount > 10000) {
-      setError('Maximum top-up amount is €10,000');
+      setError(`Maximum top-up amount is ${formatCurrency(10000, currency)}`);
       return;
     }
 
@@ -76,7 +85,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
             Current Balance
           </Typography>
           <Typography className="balance-amount">
-            €{balance?.toFixed(2) || '0.00'}
+            {formatCurrency(balance, currency)}
           </Typography>
           <Button
             variant="contained"
@@ -98,13 +107,13 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
             <Card className="statistics-card">
               <TrendingUp color="primary" />
               <Typography className="stat-value">
-                €{((balance || 0) * 0.05).toFixed(2)}
+                {formatCurrency((balance || 0) * 0.05, currency)}
               </Typography>
               <Typography className="stat-label">
                 Estimated Pages
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Based on avg. €0.05/page
+                Based on avg. {formatCurrency(0.05, currency)}/page
               </Typography>
             </Card>
           </Grid>
@@ -119,7 +128,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
                 Documents Available
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Based on avg. €2/document
+                Based on avg. {formatCurrency(2, currency)}/document
               </Typography>
             </Card>
           </Grid>
@@ -143,7 +152,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
         <Alert severity="info" sx={{ mt: 3 }}>
           <Typography variant="body2">
             <strong>How pricing works:</strong> You pay per page analyzed.
-            Standard rate is €0.05 per page. Complex documents may have
+            Standard rate is {formatCurrency(0.05, currency)} per page. Complex documents may have
             different rates.
           </Typography>
         </Alert>
@@ -165,7 +174,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
           )}
 
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Add funds to your account balance. Minimum amount is €5.
+            Add funds to your account balance. Minimum amount is {formatCurrency(5, currency)}.
           </Typography>
 
           <Box className="amount-buttons">
@@ -191,7 +200,7 @@ const BalanceSection: React.FC<BalanceSectionProps> = ({
               startAdornment: '€',
               inputProps: { min: 5, max: 10000, step: 0.01 }
             }}
-            helperText="Enter amount between €5 and €10,000"
+            helperText={`Enter amount between ${formatCurrency(5, currency)} and ${formatCurrency(10000, currency)}`}
           />
 
           <Alert severity="warning" sx={{ mt: 2 }}>

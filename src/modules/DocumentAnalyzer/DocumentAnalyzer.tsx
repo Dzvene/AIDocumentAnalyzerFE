@@ -1,88 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../store/hooks'
 import { exportAnalysisToPDF } from './pdfExport'
 import './DocumentAnalyzer.scss'
 import ErrorNotification from '../../components/ErrorNotification/ErrorNotification'
-
-// Типы документов с предустановленными проверками
-const DOCUMENT_TYPES = {
-  RENTAL: {
-    id: 'rental',
-    name: 'Договор аренды',
-    icon: '🏠',
-    checks: [
-      { id: 'notice_period', label: 'Сроки уведомления', default: true },
-      { id: 'penalties', label: 'Штрафы и пени', default: true },
-      { id: 'special_conditions', label: 'Особые условия', default: true },
-      { id: 'termination', label: 'Условия расторжения', default: true },
-      { id: 'deposit', label: 'Депозит и его возврат', default: true },
-      { id: 'rent_increase', label: 'Повышение арендной платы', default: false },
-      { id: 'maintenance', label: 'Обязанности по ремонту', default: false },
-    ]
-  },
-  INSURANCE: {
-    id: 'insurance',
-    name: 'Страховой полис',
-    icon: '🛡️',
-    checks: [
-      { id: 'exclusions', label: 'Исключения из покрытия', default: true },
-      { id: 'deductible', label: 'Франшиза', default: true },
-      { id: 'limits', label: 'Лимиты выплат', default: true },
-      { id: 'claim_deadlines', label: 'Сроки подачи заявлений', default: true },
-      { id: 'cancellation', label: 'Условия отмены', default: false },
-      { id: 'premium_changes', label: 'Изменение премий', default: false },
-      { id: 'waiting_period', label: 'Период ожидания', default: false },
-    ]
-  },
-  EMPLOYMENT: {
-    id: 'employment', 
-    name: 'Трудовой договор',
-    icon: '💼',
-    checks: [
-      { id: 'probation', label: 'Испытательный срок', default: true },
-      { id: 'notice_termination', label: 'Сроки увольнения', default: true },
-      { id: 'non_compete', label: 'Запрет на конкуренцию', default: true },
-      { id: 'confidentiality', label: 'Конфиденциальность', default: true },
-      { id: 'overtime', label: 'Сверхурочная работа', default: false },
-      { id: 'benefits', label: 'Льготы и компенсации', default: false },
-      { id: 'intellectual_property', label: 'Интеллектуальная собственность', default: false },
-    ]
-  },
-  PURCHASE: {
-    id: 'purchase',
-    name: 'Договор купли-продажи',
-    icon: '🛒',
-    checks: [
-      { id: 'warranties', label: 'Гарантии и заверения', default: true },
-      { id: 'return_policy', label: 'Условия возврата', default: true },
-      { id: 'hidden_fees', label: 'Скрытые платежи', default: true },
-      { id: 'delivery_terms', label: 'Условия доставки', default: true },
-      { id: 'payment_terms', label: 'Условия оплаты', default: false },
-      { id: 'ownership_transfer', label: 'Переход права собственности', default: false },
-    ]
-  },
-  LOAN: {
-    id: 'loan',
-    name: 'Кредитный договор',
-    icon: '💰',
-    checks: [
-      { id: 'interest_rate', label: 'Процентная ставка и её изменения', default: true },
-      { id: 'hidden_commissions', label: 'Скрытые комиссии', default: true },
-      { id: 'early_repayment', label: 'Досрочное погашение', default: true },
-      { id: 'default_consequences', label: 'Последствия просрочки', default: true },
-      { id: 'collateral', label: 'Обеспечение и залог', default: false },
-      { id: 'insurance_requirements', label: 'Требования по страхованию', default: false },
-    ]
-  },
-  CUSTOM: {
-    id: 'custom',
-    name: 'Другой документ',
-    icon: '📄',
-    checks: []
-  }
-}
 
 // Расчет цены
 const calculatePrice = (pages: number): { price: number; discount: number; tier: string } => {
@@ -99,8 +22,87 @@ const calculatePrice = (pages: number): { price: number; discount: number; tier:
 
 const DocumentAnalyzer: React.FC = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { token, isAuthenticated } = useAppSelector((state) => state.auth)
   
+  // Generate document types from translations
+  const DOCUMENT_TYPES = useMemo(() => ({
+    RENTAL: {
+      id: 'rental',
+      name: t('documentAnalyzer.documentTypes.rental'),
+      icon: '🏠',
+      checks: [
+        { id: 'notice_period', label: t('documentAnalyzer.checks.rental.notice_period'), default: true },
+        { id: 'penalties', label: t('documentAnalyzer.checks.rental.penalties'), default: true },
+        { id: 'special_conditions', label: t('documentAnalyzer.checks.rental.special_conditions'), default: true },
+        { id: 'termination', label: t('documentAnalyzer.checks.rental.termination'), default: true },
+        { id: 'deposit', label: t('documentAnalyzer.checks.rental.deposit'), default: true },
+        { id: 'rent_increase', label: t('documentAnalyzer.checks.rental.rent_increase'), default: false },
+        { id: 'maintenance', label: t('documentAnalyzer.checks.rental.maintenance'), default: false },
+      ]
+    },
+    INSURANCE: {
+      id: 'insurance',
+      name: t('documentAnalyzer.documentTypes.insurance'),
+      icon: '🛡️',
+      checks: [
+        { id: 'exclusions', label: t('documentAnalyzer.checks.insurance.exclusions'), default: true },
+        { id: 'deductible', label: t('documentAnalyzer.checks.insurance.deductible'), default: true },
+        { id: 'limits', label: t('documentAnalyzer.checks.insurance.limits'), default: true },
+        { id: 'claim_deadlines', label: t('documentAnalyzer.checks.insurance.claim_deadlines'), default: true },
+        { id: 'cancellation', label: t('documentAnalyzer.checks.insurance.cancellation'), default: false },
+        { id: 'premium_changes', label: t('documentAnalyzer.checks.insurance.premium_changes'), default: false },
+        { id: 'waiting_period', label: t('documentAnalyzer.checks.insurance.waiting_period'), default: false },
+      ]
+    },
+    EMPLOYMENT: {
+      id: 'employment', 
+      name: t('documentAnalyzer.documentTypes.employment'),
+      icon: '💼',
+      checks: [
+        { id: 'probation', label: t('documentAnalyzer.checks.employment.probation'), default: true },
+        { id: 'notice_termination', label: t('documentAnalyzer.checks.employment.notice_termination'), default: true },
+        { id: 'non_compete', label: t('documentAnalyzer.checks.employment.non_compete'), default: true },
+        { id: 'confidentiality', label: t('documentAnalyzer.checks.employment.confidentiality'), default: true },
+        { id: 'overtime', label: t('documentAnalyzer.checks.employment.overtime'), default: false },
+        { id: 'benefits', label: t('documentAnalyzer.checks.employment.benefits'), default: false },
+        { id: 'intellectual_property', label: t('documentAnalyzer.checks.employment.intellectual_property'), default: false },
+      ]
+    },
+    PURCHASE: {
+      id: 'purchase',
+      name: t('documentAnalyzer.documentTypes.purchase'),
+      icon: '🛒',
+      checks: [
+        { id: 'warranties', label: t('documentAnalyzer.checks.purchase.warranties'), default: true },
+        { id: 'return_policy', label: t('documentAnalyzer.checks.purchase.return_policy'), default: true },
+        { id: 'hidden_fees', label: t('documentAnalyzer.checks.purchase.hidden_fees'), default: true },
+        { id: 'delivery_terms', label: t('documentAnalyzer.checks.purchase.delivery_terms'), default: true },
+        { id: 'payment_terms', label: t('documentAnalyzer.checks.purchase.payment_terms'), default: false },
+        { id: 'ownership_transfer', label: t('documentAnalyzer.checks.purchase.ownership_transfer'), default: false },
+      ]
+    },
+    LOAN: {
+      id: 'loan',
+      name: t('documentAnalyzer.documentTypes.loan'),
+      icon: '💰',
+      checks: [
+        { id: 'interest_rate', label: t('documentAnalyzer.checks.loan.interest_rate'), default: true },
+        { id: 'hidden_commissions', label: t('documentAnalyzer.checks.loan.hidden_commissions'), default: true },
+        { id: 'early_repayment', label: t('documentAnalyzer.checks.loan.early_repayment'), default: true },
+        { id: 'default_consequences', label: t('documentAnalyzer.checks.loan.default_consequences'), default: true },
+        { id: 'collateral', label: t('documentAnalyzer.checks.loan.collateral'), default: false },
+        { id: 'insurance_requirements', label: t('documentAnalyzer.checks.loan.insurance_requirements'), default: false },
+      ]
+    },
+    CUSTOM: {
+      id: 'custom',
+      name: t('documentAnalyzer.documentTypes.custom'),
+      icon: '📄',
+      checks: []
+    }
+  }), [t])
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [documentType, setDocumentType] = useState(DOCUMENT_TYPES.RENTAL)
   const [selectedChecks, setSelectedChecks] = useState<Set<string>>(
@@ -220,7 +222,7 @@ const DocumentAnalyzer: React.FC = () => {
       const authToken = token || localStorage.getItem('auth_token')
       
       if (!authToken) {
-        setError('Вы не авторизованы. Пожалуйста, войдите в систему.')
+        setError(t('documentAnalyzer.errors.notAuthenticated'))
         setTimeout(() => navigate('/login'), 2000)
         return
       }
@@ -239,9 +241,9 @@ const DocumentAnalyzer: React.FC = () => {
         const errorMessage = errorData?.detail || `HTTP error! status: ${response.status}`
         
         if (response.status === 503) {
-          setError('AI сервис не настроен. Проверьте настройки сервера.')
+          setError(t('documentAnalyzer.errors.aiNotConfigured'))
         } else {
-          setError(errorMessage || 'Ошибка при анализе документа')
+          setError(errorMessage || t('documentAnalyzer.errors.analysisError'))
         }
         
         throw new Error(errorMessage)
@@ -259,12 +261,16 @@ const DocumentAnalyzer: React.FC = () => {
         
         setAnalysisResult({
           risks: formattedRisks.length > 0 ? formattedRisks : [
-            { level: 'info', text: 'Анализ завершен. Критических рисков не обнаружено.' }
+            { level: 'info', text: t('documentAnalyzer.results.noRisks') }
           ],
           summary: result.analysis.summary,
           pageCount: result.analysis.page_count,
           recommendations: result.analysis.recommendations,
-          pricing: result.analysis.pricing
+          pricing: result.analysis.pricing,
+          checked_items: result.analysis.checked_items,
+          custom_analysis: result.analysis.custom_analysis,
+          positive_points: result.analysis.positive_points,
+          key_terms: result.analysis.key_terms
         })
       } else {
         // NO FALLBACK - NO MOCKS
@@ -272,7 +278,7 @@ const DocumentAnalyzer: React.FC = () => {
       }
     } catch (error) {
       console.error('Analysis failed:', error)
-      setError('Произошла ошибка при анализе. Попробуйте еще раз.')
+      setError(t('documentAnalyzer.errors.generalError'))
     } finally {
       setIsAnalyzing(false)
     }
@@ -283,8 +289,8 @@ const DocumentAnalyzer: React.FC = () => {
   return (
     <div className="document-analyzer">
       <div className="analyzer-header">
-        <h1>🔍 Анализ документов с AI</h1>
-        <p>Загрузите документ и мы найдем все подводные камни и важные условия</p>
+        <h1>🔍 {t('documentAnalyzer.title')}</h1>
+        <p>{t('documentAnalyzer.subtitle')}</p>
       </div>
 
       {!analysisResult ? (
@@ -303,7 +309,7 @@ const DocumentAnalyzer: React.FC = () => {
                     <p className="file-name">{selectedFile.name}</p>
                     <p className="file-size">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
                     <p className="page-count">
-                      {isCountingPages ? 'Подсчет страниц...' : `${pageCount} страниц`}
+                      {isCountingPages ? t('documentAnalyzer.upload.countingPages') : `${pageCount} ${t('documentAnalyzer.upload.pages')}`}
                     </p>
                   </div>
                   <button 
@@ -321,8 +327,8 @@ const DocumentAnalyzer: React.FC = () => {
               ) : (
                 <div className="dropzone-content">
                   <span className="upload-icon">⬆️</span>
-                  <p>Перетащите документ сюда или нажмите для выбора</p>
-                  <p className="formats">PDF, DOC, DOCX • Макс. 50MB</p>
+                  <p>{t('documentAnalyzer.upload.dragDrop')}</p>
+                  <p className="formats">{t('documentAnalyzer.upload.formats')}</p>
                 </div>
               )}
             </div>
@@ -330,7 +336,7 @@ const DocumentAnalyzer: React.FC = () => {
             {priceInfo && (
               <div className={`price-card tier-${priceInfo.tier}`}>
                 <div className="price-header">
-                  <span className="pages">{pageCount} страниц</span>
+                  <span className="pages">{pageCount} {t('documentAnalyzer.pricing.pages')}</span>
                   {priceInfo.discount > 0 && (
                     <span className="discount-badge">-{priceInfo.discount}%</span>
                   )}
@@ -339,10 +345,10 @@ const DocumentAnalyzer: React.FC = () => {
                   €{priceInfo.price.toFixed(2)}
                 </div>
                 <div className="price-details">
-                  {priceInfo.tier === 'standard' && '📄 До 10 страниц: €0.99/стр'}
-                  {priceInfo.tier === 'silver' && '📚 11-50 страниц: €0.79/стр'}
-                  {priceInfo.tier === 'gold' && '📖 51-100 страниц: €0.59/стр'}
-                  {priceInfo.tier === 'platinum' && '🏢 100+ страниц: €0.39/стр'}
+                  {priceInfo.tier === 'standard' && `📄 ${t('documentAnalyzer.pricing.tiers.standard')}`}
+                  {priceInfo.tier === 'silver' && `📚 ${t('documentAnalyzer.pricing.tiers.silver')}`}
+                  {priceInfo.tier === 'gold' && `📖 ${t('documentAnalyzer.pricing.tiers.gold')}`}
+                  {priceInfo.tier === 'platinum' && `🏢 ${t('documentAnalyzer.pricing.tiers.platinum')}`}
                 </div>
               </div>
             )}
@@ -352,7 +358,7 @@ const DocumentAnalyzer: React.FC = () => {
           <div className="config-section">
             {/* Document Type Selection */}
             <div className="document-types">
-              <h3>Тип документа</h3>
+              <h3>{t('documentAnalyzer.documentTypes.title')}</h3>
               <div className="type-grid">
                 {Object.values(DOCUMENT_TYPES).map(type => (
                   <button
@@ -370,7 +376,7 @@ const DocumentAnalyzer: React.FC = () => {
             {/* Checks Selection */}
             {documentType.checks.length > 0 && (
               <div className="checks-section">
-                <h3>Что проверить?</h3>
+                <h3>{t('documentAnalyzer.checks.title')}</h3>
                 <div className="checks-grid">
                   {documentType.checks.map(check => (
                     <label key={check.id} className="check-item">
@@ -388,11 +394,11 @@ const DocumentAnalyzer: React.FC = () => {
 
             {/* Custom Prompt */}
             <div className="custom-prompt">
-              <h3>Дополнительные вопросы</h3>
+              <h3>{t('documentAnalyzer.customPrompt.title')}</h3>
               <textarea
                 value={customPrompt}
                 onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="Например: Проверить условия о конфиденциальности, найти упоминания о третьих лицах..."
+                placeholder={t('documentAnalyzer.customPrompt.placeholder')}
                 rows={3}
               />
             </div>
@@ -406,12 +412,12 @@ const DocumentAnalyzer: React.FC = () => {
               {isAnalyzing ? (
                 <>
                   <span className="spinner">⏳</span>
-                  Анализируем документ...
+                  {t('documentAnalyzer.buttons.analyzing')}
                 </>
               ) : (
                 <>
                   <span>🔍</span>
-                  Начать анализ
+                  {t('documentAnalyzer.buttons.startAnalysis')}
                 </>
               )}
             </button>
@@ -420,13 +426,13 @@ const DocumentAnalyzer: React.FC = () => {
       ) : (
         <div className="results-section">
           <div className="results-header">
-            <h2>📊 Результаты анализа</h2>
+            <h2>📊 {t('documentAnalyzer.results.title')}</h2>
             <div className="result-actions">
               <button 
                 className="export-pdf"
                 onClick={() => {
                   const documentTypeName = Object.values(DOCUMENT_TYPES)
-                    .find(t => t.id === documentType.id)?.name || 'Документ'
+                    .find(t => t.id === documentType.id)?.name || 'Document'
                   
                   exportAnalysisToPDF({
                     summary: analysisResult.summary,
@@ -440,7 +446,7 @@ const DocumentAnalyzer: React.FC = () => {
                   })
                 }}
               >
-                📥 Скачать PDF отчет
+                📥 {t('documentAnalyzer.buttons.exportPdf')}
               </button>
               <button 
                 className="new-analysis"
@@ -450,21 +456,21 @@ const DocumentAnalyzer: React.FC = () => {
                   setPageCount(0)
                 }}
               >
-                📄 Новый документ
+                📄 {t('documentAnalyzer.buttons.newDocument')}
               </button>
             </div>
           </div>
 
           <div className="analysis-results">
             <div className="summary-card">
-              <h3>📋 Краткое резюме</h3>
+              <h3>📋 {t('documentAnalyzer.results.summary')}</h3>
               <p>{analysisResult.summary}</p>
             </div>
 
             {/* Checked Items Section - NEW */}
             {analysisResult.checked_items && Object.keys(analysisResult.checked_items).length > 0 && (
               <div className="checked-items-section">
-                <h3>📝 Результаты проверки по пунктам</h3>
+                <h3>📝 {t('documentAnalyzer.results.checkedItems')}</h3>
                 <div className="checked-items-grid">
                   {Object.entries(analysisResult.checked_items).map(([checkId, checkData]: [string, any]) => (
                     <div key={checkId} className={`check-item ${checkData.found ? 'found' : 'not-found'}`}>
@@ -475,9 +481,7 @@ const DocumentAnalyzer: React.FC = () => {
                         <span className="check-label">{checkData.label}</span>
                         {checkData.risk_level && checkData.risk_level !== 'none' && (
                           <span className={`risk-badge risk-${checkData.risk_level}`}>
-                            {checkData.risk_level === 'high' ? 'Высокий риск' :
-                             checkData.risk_level === 'medium' ? 'Средний риск' : 
-                             'Низкий риск'}
+                            {t(`documentAnalyzer.results.riskLevels.${checkData.risk_level}`)}
                           </span>
                         )}
                       </div>
@@ -492,12 +496,12 @@ const DocumentAnalyzer: React.FC = () => {
                             )}
                             {checkData.recommendation && (
                               <div className="check-recommendation">
-                                <strong>Рекомендация:</strong> {checkData.recommendation}
+                                <strong>{t('documentAnalyzer.results.recommendation')}:</strong> {checkData.recommendation}
                               </div>
                             )}
                           </>
                         ) : (
-                          <p className="not-found-text">Информация по данному пункту не найдена в документе</p>
+                          <p className="not-found-text">{t('documentAnalyzer.results.notFound')}</p>
                         )}
                       </div>
                     </div>
@@ -509,16 +513,16 @@ const DocumentAnalyzer: React.FC = () => {
             {/* Custom Analysis Section - NEW */}
             {analysisResult.custom_analysis && (
               <div className="custom-analysis-section">
-                <h3>❓ Ответ на дополнительный вопрос</h3>
+                <h3>❓ {t('documentAnalyzer.results.customAnalysis')}</h3>
                 <div className="custom-question">
-                  <strong>Вопрос:</strong> {analysisResult.custom_analysis.question}
+                  <strong>{t('documentAnalyzer.results.question')}:</strong> {analysisResult.custom_analysis.question}
                 </div>
                 <div className="custom-answer">
                   <p>{analysisResult.custom_analysis.answer}</p>
                   {analysisResult.custom_analysis.relevant_quotes && 
                    analysisResult.custom_analysis.relevant_quotes.length > 0 && (
                     <div className="relevant-quotes">
-                      <strong>Релевантные цитаты:</strong>
+                      <strong>{t('documentAnalyzer.results.relevantQuotes')}:</strong>
                       {analysisResult.custom_analysis.relevant_quotes.map((quote: string, i: number) => (
                         <blockquote key={i}>"{quote}"</blockquote>
                       ))}
@@ -529,7 +533,7 @@ const DocumentAnalyzer: React.FC = () => {
             )}
 
             <div className="risks-section">
-              <h3>⚠️ Обнаруженные риски и важные условия</h3>
+              <h3>⚠️ {t('documentAnalyzer.results.risks')}</h3>
               {analysisResult.risks && analysisResult.risks.length > 0 ? (
                 analysisResult.risks.map((risk: any, index: number) => (
                   <div key={index} className={`risk-item risk-${risk.level}`}>
@@ -538,14 +542,13 @@ const DocumentAnalyzer: React.FC = () => {
                         {risk.level === 'high' ? '🔴' : risk.level === 'medium' ? '🟡' : '🔵'}
                       </span>
                       <span className="risk-level-label">
-                        {risk.level === 'high' ? 'Высокий риск' : 
-                         risk.level === 'medium' ? 'Средний риск' : 'Информация'}
+                        {t(`documentAnalyzer.results.riskLevels.${risk.level}`)}
                       </span>
                     </div>
                     <p className="risk-text">{risk.text}</p>
                     {risk.details && (
                       <div className="risk-details">
-                        <strong>Детали:</strong> {risk.details}
+                        <strong>{t('documentAnalyzer.results.details')}:</strong> {risk.details}
                       </div>
                     )}
                     {risk.quote && (
@@ -559,13 +562,13 @@ const DocumentAnalyzer: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="no-risks">Критических рисков не обнаружено</p>
+                <p className="no-risks">{t('documentAnalyzer.results.noRisks')}</p>
               )}
             </div>
 
             {analysisResult.positive_points && analysisResult.positive_points.length > 0 && (
               <div className="positive-section">
-                <h3>✅ Положительные аспекты</h3>
+                <h3>✅ {t('documentAnalyzer.results.positiveAspects')}</h3>
                 <ul>
                   {analysisResult.positive_points.map((point: string, index: number) => (
                     <li key={index}>{point}</li>
@@ -576,7 +579,7 @@ const DocumentAnalyzer: React.FC = () => {
 
             {analysisResult.recommendations && analysisResult.recommendations.length > 0 && (
               <div className="recommendations-section">
-                <h3>💡 Рекомендации</h3>
+                <h3>💡 {t('documentAnalyzer.results.recommendations')}</h3>
                 <ul className="recommendations-list">
                   {analysisResult.recommendations.map((rec: string, index: number) => (
                     <li key={index}>
@@ -590,7 +593,7 @@ const DocumentAnalyzer: React.FC = () => {
 
             {analysisResult.key_terms && Object.keys(analysisResult.key_terms).length > 0 && (
               <div className="key-terms-section">
-                <h3>📌 Ключевые условия</h3>
+                <h3>📌 {t('documentAnalyzer.results.keyTerms')}</h3>
                 <div className="key-terms-grid">
                   {Object.entries(analysisResult.key_terms).map(([key, value], index) => (
                     <div key={index} className="key-term-item">
@@ -604,9 +607,9 @@ const DocumentAnalyzer: React.FC = () => {
 
             {analysisResult.pricing && (
               <div className="pricing-info">
-                <h4>💰 Стоимость анализа</h4>
+                <h4>💰 {t('documentAnalyzer.results.pricingInfo')}</h4>
                 <div className="pricing-details">
-                  <span>Страниц: {analysisResult.page_count || analysisResult.pageCount}</span>
+                  <span>{t('documentAnalyzer.results.pages')}: {analysisResult.page_count || analysisResult.pageCount}</span>
                   <span className="price-tag">€{analysisResult.pricing.total_price}</span>
                 </div>
               </div>

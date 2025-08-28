@@ -8,7 +8,7 @@ export interface UserProfile {
   role: string;
   email_verified: boolean;
   is_active: boolean;
-  balance: number;
+  account_balance: number;
   currency: string;
   created_at: string;
   last_login?: string;

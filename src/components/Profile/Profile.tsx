@@ -154,7 +154,7 @@ const Profile: React.FC = () => {
 
         <TabPanel value={tabValue} index={0}>
           <BalanceSection
-            balance={profileData?.balance}
+            balance={profileData?.account_balance}
             currency={profileData?.currency}
             onBalanceUpdate={fetchProfileData}
           />
