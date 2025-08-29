@@ -54,11 +54,7 @@ const AppContent: React.FC = () => {
           
           <Route path="/pricing" element={<Pricing />} />
           
-          <Route path="/analyze" element={
-            <ProtectedRoute>
-              <DocumentAnalyzer />
-            </ProtectedRoute>
-          } />
+          <Route path="/analyze" element={<DocumentAnalyzer />} />
 
           <Route path="/profile" element={
             <ProtectedRoute>

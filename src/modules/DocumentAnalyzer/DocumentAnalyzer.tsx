@@ -117,12 +117,8 @@ const DocumentAnalyzer: React.FC = () => {
   const [isCountingPages, setIsCountingPages] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
-  // Check authentication on mount
-  useEffect(() => {
-    if (!isAuthenticated && !token) {
-      navigate('/login')
-    }
-  }, [isAuthenticated, token, navigate])
+  // Remove authentication check - allow public access
+  // Users can upload and analyze documents without login
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -130,27 +126,16 @@ const DocumentAnalyzer: React.FC = () => {
       setSelectedFile(file)
       setIsCountingPages(true)
       
-      // Get real page count from backend
+      // Get real page count from backend - no authentication required for counting pages
       try {
         const formData = new FormData()
         formData.append('file', file)
         
-        // Use token from Redux store or localStorage as fallback
-        const authToken = token || localStorage.getItem('auth_token')
+        // No authentication required for page counting
+        console.log('Sending file to backend for page count (no auth required)...')
         
-        if (!authToken) {
-          console.error('No auth token! User should be logged in')
-          // Redirect to login
-          navigate('/login')
-          return
-        }
-        
-        console.log('Sending file to backend for page count...')
         const response = await fetch('http://localhost:5055/api/analysis/count-pages', {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${authToken}`
-          },
           body: formData
         })
         
@@ -179,7 +164,7 @@ const DocumentAnalyzer: React.FC = () => {
         setIsCountingPages(false)
       }
     }
-  }, [token, navigate])
+  }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -209,6 +194,13 @@ const DocumentAnalyzer: React.FC = () => {
   const handleAnalyze = async () => {
     if (!selectedFile) return
     
+    // Check authentication before analysis
+    if (!isAuthenticated) {
+      setError(t('documentAnalyzer.errors.notAuthenticated') || 'Please login to analyze documents')
+      setTimeout(() => navigate('/login'), 2000)
+      return
+    }
+    
     setIsAnalyzing(true)
     
     // Prepare analysis request
@@ -223,17 +215,20 @@ const DocumentAnalyzer: React.FC = () => {
       const authToken = token || localStorage.getItem('auth_token')
       
       if (!authToken) {
-        setError(t('documentAnalyzer.errors.notAuthenticated'))
+        setError(t('documentAnalyzer.errors.notAuthenticated') || 'Authentication required')
         setTimeout(() => navigate('/login'), 2000)
         return
       }
       
       // Call API
+      const headers: any = {}
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`
+      }
+      
       const response = await fetch('http://localhost:5055/api/analysis/quick-analyze', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`
-        },
+        headers,
         body: formData
       })
       
@@ -406,14 +401,20 @@ const DocumentAnalyzer: React.FC = () => {
 
             {/* Analyze Button */}
             <button
-              className={`analyze-button ${isAnalyzing ? 'analyzing' : ''}`}
+              className={`analyze-button ${isAnalyzing ? 'analyzing' : ''} ${!isAuthenticated ? 'requires-auth' : ''}`}
               onClick={handleAnalyze}
               disabled={!selectedFile || isAnalyzing}
+              title={!isAuthenticated ? t('documentAnalyzer.buttons.loginRequired') || 'Login required for analysis' : ''}
             >
               {isAnalyzing ? (
                 <>
                   <span className="spinner">⏳</span>
                   {t('documentAnalyzer.buttons.analyzing')}
+                </>
+              ) : !isAuthenticated ? (
+                <>
+                  <span>🔒</span>
+                  {t('documentAnalyzer.buttons.loginToAnalyze') || 'Login to Analyze'}
                 </>
               ) : (
                 <>
