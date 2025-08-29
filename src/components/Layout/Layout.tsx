@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@store/index'
 import { Header } from '../Header'
-import { Sidebar } from '../Sidebar'
 import { Footer } from '../Footer'
 import './Layout.scss'
 
 export const Layout: React.FC = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const { isDarkMode } = useSelector((state: RootState) => state.theme)
-
-  const handleSidebarToggle = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed)
-  }
 
   useEffect(() => {
     if (isDarkMode) {
@@ -25,14 +19,12 @@ export const Layout: React.FC = () => {
 
   return (
     <div className="layout">
-      <Header onMenuToggle={handleSidebarToggle} />
+      <Header />
+      
+      <main className="layout__main">
+        <Outlet />
+      </main>
 
-      <div className={`layout__container ${isSidebarCollapsed ? 'layout__container--collapsed' : ''}`}>
-        <main className="layout__main">
-          <Outlet />
-        </main>
-
-      </div>
       <Footer />
     </div>
   )

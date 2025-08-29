@@ -5,6 +5,7 @@ import { logout } from '@store/slices/authSlice'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@components/LanguageSelector'
 import { UserBalance } from '@components/UserBalance'
+import Logo from '@assets/icons/Sign.svg'
 import './Header.scss'
 
 export const Header: React.FC = () => {
@@ -39,8 +40,7 @@ export const Header: React.FC = () => {
     <header className="header">
       <div className="header__container">
         <Link to="/" className="header__logo">
-          <span className="header__logo-icon">🤖</span>
-          <span className="header__logo-text">AI Document Analyzer</span>
+          <Logo className="header__logo-icon" />
         </Link>
 
         <nav className={`header__nav ${isMobileMenuOpen ? 'header__nav--open' : ''}`}>
