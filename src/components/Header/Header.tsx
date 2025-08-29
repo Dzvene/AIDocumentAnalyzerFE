@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { path: '/', label: t('navigation.home'), public: true },
-    { path: '/analyze', label: t('navigation.analyze') || 'Analyze Document', public: true },
+    { path: '/analyze', label: 'Analyze Document', public: true },
     { path: '/profile', label: t('navigation.profile') || 'Profile', public: false },
   ]
 
