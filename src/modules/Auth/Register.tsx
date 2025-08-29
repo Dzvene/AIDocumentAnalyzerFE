@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@store/store';
-import { register, selectAuth } from '@store/slices/authSlice';
+import { register, selectAuth, resendVerification } from '@store/slices/authSlice';
 import './Auth.scss';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, isLoading, error } = useSelector(selectAuth);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -72,11 +74,58 @@ const Register: React.FC = () => {
 
     try {
       const { name, email, password } = formData;
-      await dispatch(register({ name, email, password })).unwrap();
+      await dispatch(register({ full_name: name, email, password })).unwrap();
+      setRegisteredEmail(email);
+      setRegistrationSuccess(true);
     } catch (err) {
       console.error('Registration failed:', err);
     }
   };
+
+  if (registrationSuccess) {
+    return (
+      <div className="auth">
+        <div className="auth__container">
+          <div className="auth__card">
+            <div className="auth__success-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="11" stroke="#10b981" strokeWidth="2"/>
+                <path d="M7 13l3 3 7-7" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h1 className="auth__title">Check Your Email!</h1>
+            <p className="auth__message auth__message--success">
+              We've sent a verification email to <strong>{registeredEmail}</strong>
+            </p>
+            <p className="auth__message">
+              Please check your inbox and click the verification link to activate your account.
+            </p>
+            <div className="auth__info-box">
+              <p><strong>Didn't receive the email?</strong></p>
+              <ul>
+                <li>Check your spam or junk folder</li>
+                <li>Make sure you entered the correct email address</li>
+                <li>Wait a few minutes and check again</li>
+              </ul>
+            </div>
+            <div className="auth__actions">
+              <button
+                className="auth__button auth__button--secondary"
+                onClick={() => {
+                  dispatch(resendVerification({ email: registeredEmail }));
+                }}
+              >
+                Resend Verification Email
+              </button>
+              <Link to="/login" className="auth__button auth__button--primary">
+                Go to Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth">

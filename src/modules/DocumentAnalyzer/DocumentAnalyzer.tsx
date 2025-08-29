@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../store/hooks'
 import { exportAnalysisToPDF } from './pdfExport'
+import { exportAnalysisToPDFWithUnicode } from './pdfExportWithFont'
 import './DocumentAnalyzer.scss'
 import ErrorNotification from '../../components/ErrorNotification/ErrorNotification'
 
@@ -434,7 +435,8 @@ const DocumentAnalyzer: React.FC = () => {
                   const documentTypeName = Object.values(DOCUMENT_TYPES)
                     .find(t => t.id === documentType.id)?.name || 'Document'
                   
-                  exportAnalysisToPDF({
+                  // Use Unicode-compatible PDF export
+                  exportAnalysisToPDFWithUnicode({
                     summary: analysisResult.summary,
                     risks: analysisResult.risks,
                     recommendations: analysisResult.recommendations,

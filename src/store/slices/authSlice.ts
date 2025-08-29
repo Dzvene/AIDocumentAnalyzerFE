@@ -52,8 +52,32 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   'auth/register',
-  async (userData: { email: string; password: string; name: string }) => {
+  async (userData: { email: string; password: string; full_name: string }) => {
     const response = await authApi.register(userData);
+    return response.data;
+  }
+);
+
+export const verifyEmail = createAsyncThunk(
+  'auth/verifyEmail',
+  async ({ token }: { token: string }) => {
+    const response = await authApi.verifyEmail(token);
+    return response.data;
+  }
+);
+
+export const resendVerification = createAsyncThunk(
+  'auth/resendVerification',
+  async ({ email }: { email: string }) => {
+    const response = await authApi.resendVerification(email);
+    return response.data;
+  }
+);
+
+export const handleGoogleCallback = createAsyncThunk(
+  'auth/googleCallback',
+  async ({ code }: { code: string }) => {
+    const response = await authApi.googleCallback(code);
     return response.data;
   }
 );
@@ -133,15 +157,10 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(register.fulfilled, (state) => {
         state.isLoading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.refreshToken = action.payload.refreshToken;
-        state.isAuthenticated = true;
-        localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
-        localStorage.setItem('user_data', JSON.stringify(action.payload.user));
+        // After registration, user needs to verify email
+        // Don't set authenticated until email is verified
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
@@ -175,6 +194,40 @@ const authSlice = createSlice({
         state.refreshToken = action.payload.refreshToken;
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
+      })
+      // Email verification
+      .addCase(verifyEmail.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(verifyEmail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.access_token;
+        state.isAuthenticated = true;
+        localStorage.setItem('token', action.payload.access_token);
+        localStorage.setItem('user_data', JSON.stringify(action.payload.user));
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Email verification failed';
+      })
+      // Google OAuth
+      .addCase(handleGoogleCallback.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(handleGoogleCallback.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.access_token;
+        state.isAuthenticated = true;
+        localStorage.setItem('token', action.payload.access_token);
+        localStorage.setItem('user_data', JSON.stringify(action.payload.user));
+      })
+      .addCase(handleGoogleCallback.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Google sign-in failed';
       });
   },
 });

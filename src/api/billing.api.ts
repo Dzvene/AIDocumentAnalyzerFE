@@ -4,7 +4,7 @@ import axios from './axios'
 export interface UserBalance {
   balance: number
   currency: string
-  user_id: number
+  user_id: string  // Changed from number to string to handle UUID
 }
 
 export interface Transaction {

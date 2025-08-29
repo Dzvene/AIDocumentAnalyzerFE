@@ -149,4 +149,64 @@
       margin: 0;
     }
   }
+
+  &__divider {
+    position: relative;
+    text-align: center;
+    margin: 24px 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: $color-border;
+    }
+
+    &-text {
+      position: relative;
+      display: inline-block;
+      padding: 0 16px;
+      background: white;
+      color: $color-text-secondary;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+
+  &__google-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: white;
+    color: $color-text-primary;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    &:hover:not(:disabled) {
+      background: #f8f9fa;
+      border-color: darken($color-border, 10%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__google-icon {
+    width: 20px;
+    height: 20px;
+  }
 }

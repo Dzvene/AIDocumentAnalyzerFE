@@ -17,7 +17,7 @@ import NotificationProvider from '@components/NotificationProvider'
 import { Home } from '@modules/Home'
 import DocumentAnalyzer from '@modules/DocumentAnalyzer'
 import Login from '@modules/Login'
-import { Register, ForgotPassword } from '@modules/Auth'
+import { Register, ForgotPassword, GoogleCallback, EmailVerification } from '@modules/Auth'
 import { FAQ } from '@modules/FAQ'
 import Glossary from '@modules/Glossary'
 import { Pricing } from '@modules/Pricing'
@@ -43,6 +43,8 @@ const AppContent: React.FC = () => {
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.REGISTER} element={<Register />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path="/auth/google/callback" element={<GoogleCallback />} />
+          <Route path="/verify-email" element={<EmailVerification />} />
           
           <Route path={ROUTES.FAQ} element={<FAQ />} />
           <Route path={ROUTES.FAQ_QUESTION} element={<FAQ />} />

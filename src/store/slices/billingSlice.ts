@@ -4,10 +4,14 @@ import { billingApi, UserBalance, Transaction, DocumentPricing, PublicPaymentSet
 // Async thunks
 export const fetchUserBalance = createAsyncThunk(
   'billing/fetchUserBalance',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      return await billingApi.getUserBalance()
+      console.log('Fetching user balance...')
+      const result = await billingApi.getUserBalance()
+      console.log('User balance fetched successfully:', result)
+      return result
     } catch (error: any) {
+      console.error('Failed to fetch user balance:', error)
       return rejectWithValue(error.response?.data?.detail || 'Failed to fetch user balance')
     }
   }
