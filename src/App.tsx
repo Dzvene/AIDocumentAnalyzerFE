@@ -33,7 +33,7 @@ const AppContent: React.FC = () => {
     dispatch(initializeTheme())
   }, [dispatch])
 
-  console.log('ping');
+  console.log('ping', 58);
 
   return (
     <Router>
