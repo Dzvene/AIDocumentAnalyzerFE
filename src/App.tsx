@@ -26,12 +26,14 @@ import { NotFound } from '@components/NotFound'
 
 const AppContent: React.FC = () => {
   const dispatch = useAppDispatch()
-  
+
   useAuthInit()
 
   useEffect(() => {
     dispatch(initializeTheme())
   }, [dispatch])
+
+  console.log('ping');
 
   return (
     <Router>
@@ -39,21 +41,21 @@ const AppContent: React.FC = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          
+
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.REGISTER} element={<Register />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path="/auth/google/callback" element={<GoogleCallback />} />
           <Route path="/verify-email" element={<EmailVerification />} />
-          
+
           <Route path={ROUTES.FAQ} element={<FAQ />} />
           <Route path={ROUTES.FAQ_QUESTION} element={<FAQ />} />
-          
+
           <Route path={ROUTES.GLOSSARY} element={<Glossary />} />
           <Route path={ROUTES.GLOSSARY_TERM} element={<Glossary />} />
-          
+
           <Route path="/pricing" element={<Pricing />} />
-          
+
           <Route path="/analyze" element={<DocumentAnalyzer />} />
 
           <Route path="/profile" element={
@@ -61,7 +63,7 @@ const AppContent: React.FC = () => {
               <Profile />
             </ProtectedRoute>
           } />
-          
+
           <Route path="/dashboard" element={
             <Navigate to="/analyze" replace />
           } />
