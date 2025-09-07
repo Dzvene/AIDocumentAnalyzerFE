@@ -1,25 +1,116 @@
-name: Deploy Frontend
+name: Deploy to Server
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      artifact_run:
+        description: 'GitHub Actions run number to deploy (leave empty for latest)'
+        required: false
+        type: string
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
-
+    environment: ${{ github.event.inputs.environment }}
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/onlimitshop-frontend:latest .
-          docker push ghcr.io/${{ github.repository_owner }}/onlimitshop-frontend:latest
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Download specific artifact
+      if: github.event.inputs.artifact_run != ''
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        workflow: build-and-release.yml
+        run_number: ${{ github.event.inputs.artifact_run }}
+        name: ui-build-.*
+        name_is_regexp: true
+        path: ./artifact
+    
+    - name: Download latest artifact
+      if: github.event.inputs.artifact_run == ''
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        workflow: build-and-release.yml
+        workflow_conclusion: success
+        name: ui-build-.*
+        name_is_regexp: true
+        path: ./artifact
+    
+    - name: Extract artifact
+      run: |
+        cd artifact
+        tar -xzf build-artifact.tar.gz
+        rm build-artifact.tar.gz
+        echo "Extracted files:"
+        ls -la
+    
+    - name: Deploy to Server
+      env:
+        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        DEPLOY_PATH: /var/www/aidocument/ui
+      run: |
+        echo "## Deployment Instructions" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Manual Deployment Steps:" >> $GITHUB_STEP_SUMMARY
+        echo "1. Download the artifact from this workflow run" >> $GITHUB_STEP_SUMMARY
+        echo "2. Extract the archive: \`tar -xzf build-artifact.tar.gz\`" >> $GITHUB_STEP_SUMMARY
+        echo "3. Copy files to server: \`scp -r ./* user@server:${{ env.DEPLOY_PATH }}/\`" >> $GITHUB_STEP_SUMMARY
+        echo "4. Set proper permissions: \`chmod -R 755 ${{ env.DEPLOY_PATH }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "5. Reload web server: \`sudo systemctl reload nginx\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Automated Deployment (when secrets are configured):" >> $GITHUB_STEP_SUMMARY
+        echo "Add the following secrets to your repository:" >> $GITHUB_STEP_SUMMARY
+        echo "- **DEPLOY_HOST**: Your server hostname or IP" >> $GITHUB_STEP_SUMMARY
+        echo "- **DEPLOY_USER**: SSH username" >> $GITHUB_STEP_SUMMARY
+        echo "- **DEPLOY_KEY**: SSH private key for authentication" >> $GITHUB_STEP_SUMMARY
+        
+        # Uncomment the following section when secrets are configured:
+        # 
+        # # Setup SSH
+        # mkdir -p ~/.ssh
+        # echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+        # chmod 600 ~/.ssh/deploy_key
+        # ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+        # 
+        # # Create deployment directory if it doesn't exist
+        # ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "mkdir -p $DEPLOY_PATH"
+        # 
+        # # Backup current deployment
+        # ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "
+        #   if [ -d $DEPLOY_PATH ]; then
+        #     tar -czf $DEPLOY_PATH/../backup-$(date +%Y%m%d-%H%M%S).tar.gz -C $DEPLOY_PATH .
+        #   fi
+        # "
+        # 
+        # # Copy new files
+        # scp -i ~/.ssh/deploy_key -r ./artifact/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+        # 
+        # # Set permissions
+        # ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "
+        #   chmod -R 755 $DEPLOY_PATH
+        #   chown -R www-data:www-data $DEPLOY_PATH
+        # "
+        # 
+        # # Reload web server
+        # ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "sudo systemctl reload nginx"
+        # 
+        # echo "Deployment completed successfully!"
+    
+    - name: Deployment Summary
+      run: |
+        echo "### Deployment Details" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Artifact Run:** ${{ github.event.inputs.artifact_run || 'latest' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Deploy Path:** /var/www/aidocument/ui" >> $GITHUB_STEP_SUMMARY
+        echo "- **Timestamp:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

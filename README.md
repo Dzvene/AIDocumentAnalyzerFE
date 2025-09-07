@@ -1,5 +1,7 @@
 # AI Document Analyzer - Frontend
 
+[![Build and Release](https://github.com/Dzvene/AIDocumentAnalyzerUI/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/Dzvene/AIDocumentAnalyzerUI/actions/workflows/build-and-release.yml)
+
 Современный frontend для системы анализа документов с помощью AI, построенный на React + TypeScript с полной интеграцией API.
 
 ## Особенности

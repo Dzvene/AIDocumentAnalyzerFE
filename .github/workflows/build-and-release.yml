@@ -1,0 +1,110 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+  REACT_APP_API_URL: http://api.onlimit.shop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build application
+      run: npm run build
+      env:
+        CI: false
+        REACT_APP_API_URL: ${{ env.REACT_APP_API_URL }}
+        NODE_OPTIONS: --max-old-space-size=4096
+    
+    - name: Check build output
+      run: |
+        if [ -d "dist" ]; then
+          echo "BUILD_DIR=dist" >> $GITHUB_ENV
+        elif [ -d "build" ]; then
+          echo "BUILD_DIR=build" >> $GITHUB_ENV
+        else
+          echo "Error: No build output directory found"
+          exit 1
+        fi
+        echo "Build directory: $BUILD_DIR"
+        ls -la $BUILD_DIR
+    
+    - name: Compress build artifacts
+      run: |
+        tar -czf build-artifact.tar.gz -C ${{ env.BUILD_DIR }} .
+        echo "Artifact size: $(du -h build-artifact.tar.gz | cut -f1)"
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ui-build-${{ github.sha }}
+        path: build-artifact.tar.gz
+        retention-days: 30
+    
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          Automated release from commit ${{ github.sha }}
+          
+          ## Changes
+          - Build created from main branch
+          - Commit: ${{ github.event.head_commit.message }}
+          
+          ## Deployment
+          Extract artifact to `/var/www/aidocument/ui/`
+        draft: false
+        prerelease: false
+    
+    - name: Upload Release Asset
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build-artifact.tar.gz
+        asset_name: ui-build-${{ github.sha }}.tar.gz
+        asset_content_type: application/gzip
+    
+    - name: Build Summary
+      run: |
+        echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Node Version:** ${{ env.NODE_VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **API URL:** ${{ env.REACT_APP_API_URL }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build Directory:** ${{ env.BUILD_DIR }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Artifact Size:** $(du -h build-artifact.tar.gz | cut -f1)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
