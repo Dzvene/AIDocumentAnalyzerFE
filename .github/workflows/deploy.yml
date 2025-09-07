@@ -27,7 +27,7 @@ jobs:
     
     - name: Download specific artifact
       if: github.event.inputs.artifact_run != ''
-      uses: dawidd6/action-download-artifact@v2
+      uses: dawidd6/action-download-artifact@v3
       with:
         workflow: build-and-release.yml
         run_number: ${{ github.event.inputs.artifact_run }}
@@ -37,7 +37,7 @@ jobs:
     
     - name: Download latest artifact
       if: github.event.inputs.artifact_run == ''
-      uses: dawidd6/action-download-artifact@v2
+      uses: dawidd6/action-download-artifact@v3
       with:
         workflow: build-and-release.yml
         workflow_conclusion: success

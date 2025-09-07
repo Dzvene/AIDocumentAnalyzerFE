@@ -26,7 +26,7 @@ jobs:
         cache: 'npm'
     
     - name: Cache node modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -62,7 +62,7 @@ jobs:
         echo "Artifact size: $(du -h build-artifact.tar.gz | cut -f1)"
     
     - name: Upload build artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ui-build-${{ github.sha }}
         path: build-artifact.tar.gz
@@ -71,12 +71,11 @@ jobs:
     - name: Create Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release v${{ github.run_number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
         body: |
           Automated release from commit ${{ github.sha }}
           
@@ -88,17 +87,8 @@ jobs:
           Extract artifact to `/var/www/aidocument/ui/`
         draft: false
         prerelease: false
+        artifacts: build-artifact.tar.gz
     
-    - name: Upload Release Asset
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build-artifact.tar.gz
-        asset_name: ui-build-${{ github.sha }}.tar.gz
-        asset_content_type: application/gzip
     
     - name: Build Summary
       run: |
