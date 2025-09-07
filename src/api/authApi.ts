@@ -70,7 +70,7 @@ export const authApi = {
   },
   
   verifyEmail: async (token: string) => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/api/auth/verify-email`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'}/api/auth/verify-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export const authApi = {
   },
   
   resendVerification: async (email: string) => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/api/auth/resend-verification`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'}/api/auth/resend-verification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export const authApi = {
   },
   
   googleCallback: async (code: string) => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/api/auth/oauth/google/callback`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'}/api/auth/oauth/google/callback`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

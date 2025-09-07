@@ -40,7 +40,7 @@ export const exportAnalysisToPDFServer = async (result: AnalysisResult) => {
     }
     
     // Get API URL from environment or use default
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000'
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'
     
     // Request PDF from server
     const response = await axios.post(

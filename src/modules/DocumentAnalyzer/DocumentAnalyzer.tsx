@@ -129,7 +129,8 @@ const DocumentAnalyzer: React.FC = () => {
         const formData = new FormData()
         formData.append('file', file)
         
-        const response = await fetch('http://localhost:5055/api/analysis/count-pages', {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'
+        const response = await fetch(`${apiUrl}/api/analysis/count-pages`, {
           method: 'POST',
           body: formData
         })
@@ -218,7 +219,8 @@ const DocumentAnalyzer: React.FC = () => {
         headers['Authorization'] = `Bearer ${authToken}`
       }
       
-      const response = await fetch('http://localhost:5055/api/analysis/quick-analyze', {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'
+      const response = await fetch(`${apiUrl}/api/analysis/quick-analyze`, {
         method: 'POST',
         headers,
         body: formData

@@ -68,8 +68,8 @@ const Login: React.FC = () => {
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth endpoint
-    const backendUrl = process.env.REACT_APP_API_URL || 'http://localhost:5055/api';
-    window.location.href = `${backendUrl}/auth/oauth/google/authorize?state=${encodeURIComponent(from)}`;
+    const backendUrl = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io';
+    window.location.href = `${backendUrl}/api/auth/oauth/google/authorize?state=${encodeURIComponent(from)}`;
   };
 
   return (
