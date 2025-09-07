@@ -74,23 +74,23 @@ export interface UserStatistics {
 export const profileApi = {
   // Profile
   getProfile: async (): Promise<UserProfile> => {
-    const response = await axiosInstance.get('/profile/me');
+    const response = await axiosInstance.get('/api/profile/me');
     return response.data;
   },
 
   updateProfile: async (data: Partial<UserProfile>): Promise<UserProfile> => {
-    const response = await axiosInstance.patch('/profile/me', data);
+    const response = await axiosInstance.patch('/api/profile/me', data);
     return response.data;
   },
 
   // Balance
   getBalance: async () => {
-    const response = await axiosInstance.get('/profile/balance');
+    const response = await axiosInstance.get('/api/profile/balance');
     return response.data;
   },
 
   topUpBalance: async (amount: number, paymentMethod: string = 'card') => {
-    const response = await axiosInstance.post('/profile/balance/topup', {
+    const response = await axiosInstance.post('/api/profile/balance/topup', {
       amount,
       payment_method: paymentMethod
     });
@@ -104,7 +104,7 @@ export const profileApi = {
     type?: string;
     status?: string;
   }): Promise<Transaction[]> => {
-    const response = await axiosInstance.get('/profile/transactions', { params });
+    const response = await axiosInstance.get('/api/profile/transactions', { params });
     return response.data;
   },
 
@@ -113,35 +113,35 @@ export const profileApi = {
     skip?: number;
     limit?: number;
   }): Promise<AnalysisHistoryItem[]> => {
-    const response = await axiosInstance.get('/profile/history', { params });
+    const response = await axiosInstance.get('/api/profile/history', { params });
     return response.data;
   },
 
   getAnalysisDetail: async (historyId: number): Promise<AnalysisHistoryItem> => {
-    const response = await axiosInstance.get(`/profile/history/${historyId}`);
+    const response = await axiosInstance.get(`/api/profile/history/${historyId}`);
     return response.data;
   },
 
   exportAnalysisToPDF: async (historyId: number): Promise<Blob> => {
-    const response = await axiosInstance.get(`/profile/history/${historyId}/pdf`, {
+    const response = await axiosInstance.get(`/api/profile/history/${historyId}/pdf`, {
       responseType: 'blob'
     });
     return response.data;
   },
 
   deleteAnalysisHistory: async (historyId: number) => {
-    const response = await axiosInstance.delete(`/profile/history/${historyId}`);
+    const response = await axiosInstance.delete(`/api/profile/history/${historyId}`);
     return response.data;
   },
 
   // Statistics
   getStatistics: async (): Promise<UserStatistics> => {
-    const response = await axiosInstance.get('/profile/statistics');
+    const response = await axiosInstance.get('/api/profile/statistics');
     return response.data;
   },
 
   refreshStatistics: async (): Promise<UserStatistics> => {
-    const response = await axiosInstance.post('/profile/statistics/refresh');
+    const response = await axiosInstance.post('/api/profile/statistics/refresh');
     return response.data;
   }
 };

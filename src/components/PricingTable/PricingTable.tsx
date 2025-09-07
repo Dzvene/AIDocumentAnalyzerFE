@@ -43,11 +43,8 @@ const PricingTable: React.FC = () => {
   const fetchPricingData = async () => {
     try {
       setLoading(true)
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5055'
-      // Remove duplicate /api if it's already in the base URL
-      const url = baseUrl.endsWith('/api') 
-        ? `${baseUrl}/pricing/public` 
-        : `${baseUrl}/api/pricing/public`
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'
+      const url = `${baseUrl}/api/pricing/public`
       const response = await axios.get(url)
       setTiers(response.data.tiers || [])
       setFeatures(response.data.features || [])

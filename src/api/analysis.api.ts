@@ -113,7 +113,7 @@ export interface AnalysisCostEstimate {
 
 // API Service
 class AnalysisAPI {
-  private basePath = '/analysis';
+  private basePath = '/api/analysis';
 
   /**
    * Start document analysis

@@ -30,7 +30,7 @@ export interface AuthResponse {
 
 // API Service
 class AuthAPI {
-  private basePath = '/auth';
+  private basePath = '/api/auth';
 
   /**
    * Register a new user
@@ -67,7 +67,7 @@ class AuthAPI {
    */
   async getProfile(): Promise<User> {
     try {
-      const response = await axiosInstance.get<User>('/users/me');
+      const response = await axiosInstance.get<User>('/api/users/me');
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -79,7 +79,7 @@ class AuthAPI {
    */
   async updateProfile(data: Partial<User>): Promise<User> {
     try {
-      const response = await axiosInstance.patch<User>('/users/me', data);
+      const response = await axiosInstance.patch<User>('/api/users/me', data);
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -91,7 +91,7 @@ class AuthAPI {
    */
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
     try {
-      await axiosInstance.post('/users/change-password', {
+      await axiosInstance.post('/api/users/change-password', {
         current_password: currentPassword,
         new_password: newPassword,
       });
@@ -105,7 +105,7 @@ class AuthAPI {
    */
   async requestPasswordReset(email: string): Promise<void> {
     try {
-      await axiosInstance.post('/auth/forgot-password', { email });
+      await axiosInstance.post('/api/auth/forgot-password', { email });
     } catch (error) {
       throw handleApiError(error);
     }
@@ -116,7 +116,7 @@ class AuthAPI {
    */
   async resetPassword(token: string, newPassword: string): Promise<void> {
     try {
-      await axiosInstance.post('/auth/reset-password', {
+      await axiosInstance.post('/api/auth/reset-password', {
         token,
         new_password: newPassword,
       });
@@ -130,7 +130,7 @@ class AuthAPI {
    */
   async verifyEmail(token: string): Promise<void> {
     try {
-      await axiosInstance.post('/auth/verify-email', { token });
+      await axiosInstance.post('/api/auth/verify-email', { token });
     } catch (error) {
       throw handleApiError(error);
     }
@@ -142,7 +142,7 @@ class AuthAPI {
   async logout(): Promise<void> {
     try {
       // Optional: Call logout endpoint if backend tracks sessions
-      await axiosInstance.post('/auth/logout');
+      await axiosInstance.post('/api/auth/logout');
     } catch (error) {
       // Ignore errors on logout
       console.error('Logout error:', error);

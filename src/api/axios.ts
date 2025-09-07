@@ -4,7 +4,7 @@ import { clearAuth } from '@store/slices/authSlice';
 import { showErrorNotification } from '@store/slices/notificationSlice';
 
 // API Base Configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5055/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io';
 
 // Debug logging for development
 if (process.env.NODE_ENV === 'development') {

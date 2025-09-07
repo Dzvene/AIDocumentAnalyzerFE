@@ -81,11 +81,11 @@ export interface TransactionListResponse {
 export const billingApi = {
   // Get user balance
   getUserBalance: (): Promise<UserBalance> => 
-    axios.get('/billing/balance'),
+    axios.get('/api/billing/balance'),
 
   // Create deposit via Stripe
   createStripeDeposit: (amount: number, returnUrl?: string, cancelUrl?: string): Promise<PaymentIntent> =>
-    axios.post('/billing/deposit/stripe', {
+    axios.post('/api/billing/deposit/stripe', {
       amount,
       currency: 'EUR',
       return_url: returnUrl,
@@ -94,7 +94,7 @@ export const billingApi = {
 
   // Create deposit via PayPal
   createPayPalDeposit: (amount: number, returnUrl?: string, cancelUrl?: string): Promise<PayPalOrder> =>
-    axios.post('/billing/deposit/paypal', {
+    axios.post('/api/billing/deposit/paypal', {
       amount,
       currency: 'EUR',
       return_url: returnUrl,
@@ -103,21 +103,21 @@ export const billingApi = {
 
   // Get document pricing
   getDocumentPricing: (documentId: string, estimatedPages: number): Promise<DocumentPricing> =>
-    axios.post('/billing/document/pricing', {
+    axios.post('/api/billing/document/pricing', {
       document_id: documentId,
       estimated_pages: estimatedPages
     }),
 
   // Process document payment
   processDocumentPayment: (documentId: string, estimatedPages: number): Promise<{ status: string; message: string }> =>
-    axios.post('/billing/document/process', {
+    axios.post('/api/billing/document/process', {
       document_id: documentId,
       estimated_pages: estimatedPages
     }),
 
   // Get user transactions
   getUserTransactions: (page: number = 1, perPage: number = 20): Promise<TransactionListResponse> =>
-    axios.get('/billing/transactions', {
+    axios.get('/api/billing/transactions', {
       params: { page, per_page: perPage }
     }),
 
@@ -127,5 +127,5 @@ export const billingApi = {
 
   // Get public payment settings (no auth required)
   getPublicSettings: (): Promise<PublicPaymentSettings> =>
-    axios.get('/billing/settings/public')
+    axios.get('/api/billing/settings/public')
 }

@@ -63,27 +63,27 @@ export const glossaryApi = {
     search?: string;
     language?: string;
   }): Promise<GlossaryTermListResponse> => {
-    const response = await axios.get('/glossary/terms', { params });
+    const response = await axios.get('/api/glossary/terms', { params });
     return response.data;
   },
 
   // Get a specific term by ID
   getTerm: async (termId: number): Promise<GlossaryTerm> => {
-    const response = await axios.get(`/glossary/terms/${termId}`);
+    const response = await axios.get(`/api/glossary/terms/${termId}`);
     return response.data;
   },
 
 
   // Search terms
   searchTerms: async (searchRequest: GlossarySearchRequest): Promise<GlossarySearchResponse> => {
-    const response = await axios.post('/glossary/search', searchRequest);
+    const response = await axios.post('/api/glossary/search', searchRequest);
     return response.data;
   },
 
 
   // Get glossary statistics
   getStats: async (): Promise<GlossaryStats> => {
-    const response = await axios.get('/glossary/stats');
+    const response = await axios.get('/api/glossary/stats');
     return response.data;
   },
 
@@ -96,7 +96,7 @@ export const glossaryApi = {
       description: string;
     }>;
   }): Promise<GlossaryTerm> => {
-    const response = await axios.post('/glossary/terms', termData);
+    const response = await axios.post('/api/glossary/terms', termData);
     return response.data;
   },
 
@@ -106,12 +106,12 @@ export const glossaryApi = {
       is_active: boolean;
     }>
   ): Promise<GlossaryTerm> => {
-    const response = await axios.put(`/glossary/terms/${termId}`, updateData);
+    const response = await axios.put(`/api/glossary/terms/${termId}`, updateData);
     return response.data;
   },
 
   deleteTerm: async (termId: number): Promise<void> => {
-    await axios.delete(`/glossary/terms/${termId}`);
+    await axios.delete(`/api/glossary/terms/${termId}`);
   },
 
   addTranslation: async (
@@ -122,7 +122,7 @@ export const glossaryApi = {
       description: string;
     }
   ): Promise<GlossaryTermTranslation> => {
-    const response = await axios.post(`/glossary/terms/${termId}/translations`, translation);
+    const response = await axios.post(`/api/glossary/terms/${termId}/translations`, translation);
     return response.data;
   },
 
@@ -133,11 +133,11 @@ export const glossaryApi = {
       description: string;
     }>
   ): Promise<GlossaryTermTranslation> => {
-    const response = await axios.put(`/glossary/translations/${translationId}`, updateData);
+    const response = await axios.put(`/api/glossary/translations/${translationId}`, updateData);
     return response.data;
   },
 
   deleteTranslation: async (translationId: number): Promise<void> => {
-    await axios.delete(`/glossary/translations/${translationId}`);
+    await axios.delete(`/api/glossary/translations/${translationId}`);
   }
 };

@@ -87,7 +87,7 @@ export interface BulkUploadResponse {
 
 // API Service
 class DocumentsAPI {
-  private basePath = '/documents';
+  private basePath = '/api/documents';
 
   /**
    * Upload a single document
