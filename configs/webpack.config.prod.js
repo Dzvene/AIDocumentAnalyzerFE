@@ -51,6 +51,11 @@ module.exports = {
       silent: true,
       defaults: false,
     }),
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_API_URL': JSON.stringify('http://api.clearcontract.io'),
+      'process.env.REACT_APP_WS_URL': JSON.stringify('ws://api.clearcontract.io'),
+      'process.env.REACT_APP_ENV': JSON.stringify('production'),
+    }),
     new CopyPlugin({
       patterns: [
         {
