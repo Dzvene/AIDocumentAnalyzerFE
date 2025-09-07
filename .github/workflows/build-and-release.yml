@@ -9,7 +9,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  REACT_APP_API_URL: http://api.onlimit.shop
+  REACT_APP_API_URL: http://api.clearcontract.io
 
 jobs:
   build:
