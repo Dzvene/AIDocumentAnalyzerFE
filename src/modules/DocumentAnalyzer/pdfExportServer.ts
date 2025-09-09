@@ -51,7 +51,8 @@ export const exportAnalysisToPDFServer = async (result: AnalysisResult) => {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/pdf'
-        }
+        },
+        withCredentials: true
       }
     )
     

@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocalization } from '@hooks/useLocalization'
 import { useNotification } from '@hooks/useNotification'
+import { 
+  getLanguageDisplayName, 
+  getLanguageFlag, 
+  switchLanguage,
+  SUPPORTED_LANGUAGES,
+  type SupportedLanguage 
+} from '@utils/languageDetection'
 import './LanguageSelector.scss'
 
-const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧', nativeName: 'English' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺', nativeName: 'Русский' }
-]
+const languages = SUPPORTED_LANGUAGES.map(code => ({
+  code,
+  name: getLanguageDisplayName(code),
+  flag: getLanguageFlag(code),
+  nativeName: getLanguageDisplayName(code)
+}))
 
 export const LanguageSelector: React.FC = () => {
   const { currentLanguage: currentLangCode, changeLanguage, getLanguageName, t } = useLocalization()
@@ -26,6 +35,11 @@ export const LanguageSelector: React.FC = () => {
           t('localization.languageChanged', { language: languageName })
         )
         setIsOpen(false)
+        
+        // Switch subdomain if in production or using .local domains
+        const shouldRedirect = window.location.hostname.includes('clearcontract.io') || 
+                              window.location.hostname.includes('.local')
+        switchLanguage(langCode as SupportedLanguage, shouldRedirect)
       } else {
         notification.error(t('errors.generic'))
       }

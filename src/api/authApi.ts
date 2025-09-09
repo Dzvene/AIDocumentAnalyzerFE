@@ -75,6 +75,7 @@ export const authApi = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ token }),
     });
     
@@ -92,6 +93,7 @@ export const authApi = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ email }),
     });
     
@@ -109,6 +111,7 @@ export const authApi = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ code }),
     });
     

@@ -19,6 +19,8 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Enable credentials for cross-subdomain requests
+  withCredentials: true,
 });
 
 // Request interceptor to add auth token

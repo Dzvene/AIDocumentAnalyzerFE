@@ -132,6 +132,7 @@ const DocumentAnalyzer: React.FC = () => {
         const apiUrl = process.env.REACT_APP_API_URL || 'http://api.clearcontract.io'
         const response = await fetch(`${apiUrl}/api/analysis/count-pages`, {
           method: 'POST',
+          credentials: 'include',
           body: formData
         })
         
@@ -223,6 +224,7 @@ const DocumentAnalyzer: React.FC = () => {
       const response = await fetch(`${apiUrl}/api/analysis/quick-analyze`, {
         method: 'POST',
         headers,
+        credentials: 'include',
         body: formData
       })
       

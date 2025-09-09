@@ -154,6 +154,15 @@ module.exports = {
     port: 3098,
     hot: true,
     historyApiFallback: true,
+    // Allow specific hosts for local subdomain testing
+    allowedHosts: [
+      '.clearcontract.local',
+      'clearcontract.local',
+      'localhost',
+      '127.0.0.1'
+    ],
+    // Listen on all interfaces
+    host: '0.0.0.0',
     headers: {
       'Cache-Control': 'no-cache, no-store, must-revalidate',
     },
