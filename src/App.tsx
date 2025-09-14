@@ -15,7 +15,7 @@ import { LoadingSpinner, Layout, ProtectedRoute } from '@components'
 import NotificationProvider from '@components/NotificationProvider'
 
 import { Home } from '@modules/Home'
-import DocumentAnalyzer from '@modules/DocumentAnalyzer'
+import DocumentAnalyzerStepper from '@modules/DocumentAnalyzer/DocumentAnalyzerStepper'
 import Login from '@modules/Login'
 import { Register, ForgotPassword, GoogleCallback, EmailVerification } from '@modules/Auth'
 import { FAQ } from '@modules/FAQ'
@@ -56,7 +56,7 @@ const AppContent: React.FC = () => {
 
           <Route path="/pricing" element={<Pricing />} />
 
-          <Route path="/analyze" element={<DocumentAnalyzer />} />
+          <Route path="/analyze" element={<DocumentAnalyzerStepper />} />
 
           <Route path="/profile" element={
             <ProtectedRoute>
