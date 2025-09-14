@@ -112,34 +112,6 @@
         width: 100%;
         padding: 0;
       }
-      
-      .upload-button {
-        background: #181450;
-        color: var(--color-white);
-        border: none;
-        border-radius: 100px;
-        padding: 14px 24px;
-        width: 100%;
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: opacity 0.2s;
-        letter-spacing: -0.3px;
-        
-        &:active {
-          opacity: 0.8;
-        }
-        
-        .upload-icon {
-          width: 14px;
-          height: 14px;
-          margin-left: 4px;
-        }
-      }
     }
     
     .privacy-notice {

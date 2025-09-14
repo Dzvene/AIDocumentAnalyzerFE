@@ -4,7 +4,7 @@ import './Button.scss'
 
 export interface ButtonProps {
   children: React.ReactNode
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'gradient'
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
   loading?: boolean
@@ -12,6 +12,8 @@ export interface ButtonProps {
   onClick?: () => void
   type?: 'button' | 'submit' | 'reset'
   className?: string
+  icon?: React.ReactNode
+  iconPosition?: 'left' | 'right'
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -24,6 +26,8 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
   type = 'button',
   className,
+  icon,
+  iconPosition = 'right',
   ...props
 }) => {
   const buttonClasses = classNames(
@@ -54,7 +58,9 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {loading && <span className="button__spinner" />}
       <span className={loading ? 'button__content--hidden' : 'button__content'}>
+        {icon && iconPosition === 'left' && <span className="button__icon button__icon--left">{icon}</span>}
         {children}
+        {icon && iconPosition === 'right' && <span className="button__icon button__icon--right">{icon}</span>}
       </span>
     </button>
   )

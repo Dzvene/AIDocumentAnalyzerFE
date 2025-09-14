@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDropzone } from 'react-dropzone'
 import './DocumentAnalyzerStepper.scss'
-import { Button } from '../../components/Button'
+import { Button } from '@components/Button'
 
 // Types
 interface DocumentType {
@@ -143,11 +143,17 @@ const DocumentAnalyzerStepper: React.FC = () => {
             
             <div {...getRootProps()} className="upload-button-wrapper">
               <input {...getInputProps()} />
-              <Button fullWidth>
+              <Button 
+                variant="gradient"
+                size="lg"
+                fullWidth
+                icon={
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 10V3M7 3L4 6M7 3L10 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                }
+              >
                 Upload document
-                <svg className="upload-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 10V3M7 3L4 6M7 3L10 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
               </Button>
             </div>
           </div>
@@ -181,7 +187,12 @@ const DocumentAnalyzerStepper: React.FC = () => {
           
           <div className="bottom-navigation">
             <div className="nav-buttons">
-              <Button onClick={goToNextStep} fullWidth>
+              <Button 
+                onClick={goToNextStep} 
+                variant="gradient"
+                size="lg"
+                fullWidth
+              >
                 Continue request
               </Button>
             </div>
@@ -227,7 +238,11 @@ const DocumentAnalyzerStepper: React.FC = () => {
       
       <div className="bottom-navigation">
         <div className="nav-buttons">
-          <Button onClick={goToPreviousStep} variant="secondary">
+          <Button 
+            onClick={goToPreviousStep} 
+            variant="secondary"
+            size="lg"
+          >
             ←
           </Button>
         </div>
@@ -276,7 +291,11 @@ const DocumentAnalyzerStepper: React.FC = () => {
       
       <div className="bottom-navigation">
         <div className="nav-buttons">
-          <Button onClick={goToPreviousStep} variant="secondary">
+          <Button 
+            onClick={goToPreviousStep} 
+            variant="secondary"
+            size="lg"
+          >
             ←
           </Button>
         </div>
@@ -328,7 +347,11 @@ const DocumentAnalyzerStepper: React.FC = () => {
       
       <div className="bottom-navigation">
         <div className="nav-buttons">
-          <Button onClick={goToPreviousStep} variant="secondary">
+          <Button 
+            onClick={goToPreviousStep} 
+            variant="secondary"
+            size="lg"
+          >
             ←
           </Button>
           <Button
@@ -341,6 +364,8 @@ const DocumentAnalyzerStepper: React.FC = () => {
             }}
             disabled={isAnalyzing}
             loading={isAnalyzing}
+            variant="gradient"
+            size="lg"
             fullWidth
           >
             Continue
@@ -404,7 +429,11 @@ const DocumentAnalyzerStepper: React.FC = () => {
       
       <div className="bottom-navigation">
         <div className="nav-buttons">
-          <Button variant="secondary" fullWidth>
+          <Button 
+            variant="secondary" 
+            size="lg"
+            fullWidth
+          >
             Download Report
           </Button>
           <Button
@@ -421,6 +450,8 @@ const DocumentAnalyzerStepper: React.FC = () => {
                 price: 0
               })
             }}
+            variant="gradient"
+            size="lg"
             fullWidth
           >
             New Analysis
