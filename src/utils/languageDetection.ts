@@ -85,8 +85,9 @@ export const switchLanguage = (newLang: SupportedLanguage, redirect: boolean = t
   // Build new hostname
   const newHost = newLang === DEFAULT_LANGUAGE ? baseDomain : `${newLang}.${baseDomain}`;
   
-  // Construct new URL preserving path and query
-  const newUrl = `${window.location.protocol}//${newHost}${window.location.pathname}${window.location.search}${window.location.hash}`;
+  // Construct new URL preserving port, path and query
+  const port = window.location.port ? `:${window.location.port}` : '';
+  const newUrl = `${window.location.protocol}//${newHost}${port}${window.location.pathname}${window.location.search}${window.location.hash}`;
   
   // Redirect
   window.location.href = newUrl;
