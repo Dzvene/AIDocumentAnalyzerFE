@@ -189,26 +189,9 @@
   }
   
   &__cta-button {
-    background: #5B3FFF;
-    color: #FFFFFF;
-    border: none;
-    padding: 16px 32px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: #4A2FEE;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(91, 63, 255, 0.3);
-    }
+    // Button component handles the styling
     
     @media (min-width: 768px) {
-      padding: 18px 40px;
-      font-size: 18px;
-      border-radius: 10px;
     }
   }
   
@@ -656,26 +639,10 @@
   }
   
   &__final-button {
-    background: #5B3FFF;
-    color: #FFFFFF;
-    border: none;
-    padding: 16px 32px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: #4A2FEE;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(91, 63, 255, 0.3);
-    }
+    // Button component handles the styling
+    margin-top: 32px;
     
     @media (min-width: 768px) {
-      padding: 18px 40px;
-      font-size: 18px;
-      border-radius: 10px;
     }
   }
 }

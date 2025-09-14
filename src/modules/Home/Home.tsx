@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Button } from '@components/Button'
 import './Home.scss'
 
 export const Home: React.FC = () => {
@@ -56,9 +57,14 @@ export const Home: React.FC = () => {
           </div>
         </div>
 
-        <button className="home__cta-button" onClick={handleProcessDocuments}>
+        <Button 
+          className="home__cta-button" 
+          onClick={handleProcessDocuments}
+          variant="gradient"
+          size="lg"
+        >
           Process documents free
-        </button>
+        </Button>
       </section>
 
       {/* AI Providers Section */}
@@ -190,9 +196,14 @@ export const Home: React.FC = () => {
           confidently, all on your own.
         </p>
         
-        <button className="home__final-button" onClick={handleProcessDocuments}>
+        <Button 
+          className="home__final-button" 
+          onClick={handleProcessDocuments}
+          variant="gradient"
+          size="lg"
+        >
           Process documents free
-        </button>
+        </Button>
       </section>
     </div>
   )
