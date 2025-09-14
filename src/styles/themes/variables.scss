@@ -29,15 +29,15 @@
   --gradients-green: linear-gradient(222.6deg, #00da84 0.01%, #009d5f 100%);
   
   // Primary colors (mapped from brand colors)
-  --color-primary: var(--color-yellow);
-  --color-primary-hover: #e0ad00;
-  --color-primary-50: #fef3c7;
-  --color-primary-100: #fde68a;
-  --color-primary-200: #fcd34d;
-  --color-primary-300: #fbbf24;
-  --color-primary-400: #f59e0b;
-  --color-primary-500: #f9c200;
-  --color-primary-600: #d97706;
+  --color-primary: #181450;
+  --color-primary-hover: #0F0C3A;
+  --color-primary-50: #E8E7F0;
+  --color-primary-100: #D1CFE1;
+  --color-primary-200: #A39FC3;
+  --color-primary-300: #6A6494;
+  --color-primary-400: #3F3972;
+  --color-primary-500: #181450;
+  --color-primary-600: #0F0C3A;
   --color-secondary: var(--color-orange);
   --color-secondary-hover: var(--color-hover-50);
   
@@ -95,8 +95,8 @@
   --font-weight-bold: 700;
   
   // RGB values for colors (for opacity usage)
-  --color-primary-500-rgb: 249, 194, 0;
-  --color-primary-600-rgb: 217, 119, 6;
+  --color-primary-500-rgb: 24, 20, 80;
+  --color-primary-600-rgb: 15, 12, 58;
   --color-error-500-rgb: 233, 66, 34;
 }
 
