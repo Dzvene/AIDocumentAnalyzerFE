@@ -110,8 +110,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
-      'process.env.REACT_APP_API_URL': JSON.stringify('http://localhost:8000'),
-      'process.env.REACT_APP_WS_URL': JSON.stringify('ws://localhost:8000'),
+      'process.env.REACT_APP_API_URL': JSON.stringify('http://localhost:5055'),
+      'process.env.REACT_APP_WS_URL': JSON.stringify('ws://localhost:5055'),
       'process.env.REACT_APP_ENV': JSON.stringify('development'),
     }),
     new CopyPlugin({
